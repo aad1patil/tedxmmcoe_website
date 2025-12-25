@@ -2,17 +2,22 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../contexts/AuthContext';
 
 const Layout = () => {
+    const { currentUser } = useAuth() ?? {};
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        { name: 'Event Details', path: '/event-details' },
+        ...(currentUser ? [
+            { name: 'Event Details', path: '/event-details' },
+            { name: 'Timeline', path: '/timeline' }
+        ] : []),
         { name: 'Speakers', path: '/speakers' },
-        { name: 'Timeline', path: '/timeline' },
-        { name: 'Register', path: '/register', cta: true },
+        ...(!currentUser ? [{ name: 'Login', path: '/login', cta: true }] : []),
+        { name: currentUser ? 'Dashboard' : 'Register', path: currentUser ? '/dashboard' : '/register', cta: true },
     ];
 
     const isActive = (path: string) => location.pathname === path;
@@ -28,7 +33,7 @@ const Layout = () => {
                     </Link>
 
                     {/* Desktop Nav */}
-                    <nav className="hidden md:flex items-center space-x-8">
+                    <nav className="hidden md:flex items-center gap-8">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}

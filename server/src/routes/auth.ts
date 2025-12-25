@@ -1,22 +1,16 @@
 import { Router, Request, Response } from 'express';
-import { auth, db } from '../config/firebase';
+import { db } from '../config/firebase';
+import { verifyToken } from '../middleware/authMiddleware';
 
 const router = Router();
 
 // Sync User (Called after Firebase Auth on client)
 // This creates/updates the user document in Firestore with their Role/Team info
-router.post('/sync-user', async (req: Request, res: Response) => {
+router.post('/sync-user', verifyToken, async (req: Request, res: Response) => {
+    console.log("Server: /sync-user endpoint hit");
     try {
-        const { token, role, teamRole, phone, name } = req.body;
-
-        if (!token) {
-            return res.status(400).json({ success: false, message: 'No token provided' });
-        }
-
-        // Verify the Firebase Token
-        const decodedToken = await auth.verifyIdToken(token);
-        const uid = decodedToken.uid;
-        const email = decodedToken.email;
+        const { role, teamRole, phone, name } = req.body;
+        const { uid, email } = req.user; // Set by verifyToken middleware
 
         // Prepare user data
         const userData: any = {
@@ -45,18 +39,14 @@ router.post('/sync-user', async (req: Request, res: Response) => {
 
     } catch (err: any) {
         console.error('Sync Error:', err.message);
-        res.status(401).json({ success: false, message: 'Invalid Token or Server Error' });
+        res.status(500).json({ success: false, message: 'Server Verification Error' });
     }
 });
 
-// Get Current User Profile (Protected Route example)
-router.get('/me', async (req: Request, res: Response) => {
+// Get Current User Profile (Protected Route)
+router.get('/me', verifyToken, async (req: Request, res: Response) => {
     try {
-        const token = req.headers.authorization?.split('Bearer ')[1];
-        if (!token) return res.status(401).json({ success: false, message: 'No token' });
-
-        const decodedToken = await auth.verifyIdToken(token);
-        const uid = decodedToken.uid;
+        const { uid } = req.user;
 
         const userDoc = await db.collection('users').doc(uid).get();
         if (!userDoc.exists) {
@@ -70,7 +60,7 @@ router.get('/me', async (req: Request, res: Response) => {
 
     } catch (err: any) {
         console.error('Profile Error:', err.message);
-        res.status(401).json({ success: false, message: 'Unauthorized' });
+        res.status(500).json({ success: false, message: 'Server Error' });
     }
 });
 

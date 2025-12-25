@@ -1,75 +1,95 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
-
-const ROLES = [
-    'Faculty', 'Licensee', 'Curation Team', 'Design Team',
-    'Outreach Team', 'Production Team', 'Logistics Team',
-    'Speaker', 'Attendee'
-];
-
-const TEAM_ROLES = ['Head', 'Co-Head', 'Member'];
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login, signup, currentUser } = useAuth()!;
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         phone: '',
         password: '',
-        role: '',
+        role: 'Attendee',
         teamRole: ''
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // Redirect if already logged in
+    useEffect(() => {
+        if (currentUser) {
+            navigate('/dashboard');
+        }
+    }, [currentUser, navigate]);
+
     const handleChange = (e: any) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const needsTeamRole = (role: string) => {
-        return !['Faculty', 'Licensee', 'Speaker', 'Attendee'].includes(role) && role !== '';
     };
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         setError('');
         setLoading(true);
+        console.log("Starting Authentication Process...");
+        console.log("Form Data:", { ...formData, password: '[REDACTED]' });
 
         try {
             let userCredential;
             if (isLogin) {
                 // Login
-                userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+                console.log("Attempting Firebase SignIn...");
+                userCredential = await login(formData.email, formData.password);
+                console.log("Firebase SignIn Success:", userCredential.user.uid);
             } else {
-                // Register in Firebase
-                userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+                // Register
+                console.log("Attempting Firebase Call (CreateUser)...");
+                userCredential = await signup(formData.email, formData.password);
+                console.log("Firebase CreateUser Success:", userCredential.user.uid);
             }
 
+            console.log("Getting ID Token...");
             const token = await userCredential.user.getIdToken();
+            console.log("ID Token retrieved (first 10 chars):", token.substring(0, 10) + "...");
 
             // If registering, sync extra details to our backend
             if (!isLogin) {
-                await axios.post('http://localhost:3000/api/auth/sync-user', {
-                    token,
+                console.log("Attempting Server Sync to http://localhost:5001/api/auth/sync-user ...");
+                const syncResponse = await axios.post('http://localhost:5001/api/auth/sync-user', {
                     name: formData.name,
                     phone: formData.phone,
                     role: formData.role,
                     teamRole: formData.teamRole
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 });
+                console.log("Server Sync Success:", syncResponse.data);
             }
 
-            // Save token (or just rely on Firebase auth state observer in a real app)
-            localStorage.setItem('token', token);
+            // Navigate handled by useEffect or here
+            console.log("Navigating to Dashboard...");
             navigate('/dashboard');
 
         } catch (err: any) {
-            console.error(err);
-            setError(err.message.replace('Firebase: ', ''));
+            console.error("Authentication Error Details:", err);
+
+            // Improve error message display
+            let errorMessage = "An error occurred";
+            if (err.code) {
+                errorMessage = `Firebase Error: ${err.code}`;
+            } else if (err.response) {
+                errorMessage = `Server Error: ${err.response.status} - ${err.response.data.message || err.response.statusText}`;
+            } else {
+                errorMessage = err.message;
+            }
+
+            console.error("Constructed Error Message:", errorMessage);
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -90,7 +110,7 @@ const Login = () => {
                     </div>
 
                     {error && (
-                        <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-6 text-sm">
+                        <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-6 text-sm capitalize">
                             {error}
                         </div>
                     )}
@@ -150,50 +170,6 @@ const Login = () => {
                                 required
                             />
                         </div>
-
-                        {!isLogin && (
-                            <>
-                                <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Role</label>
-                                    <select
-                                        name="role"
-                                        value={formData.role}
-                                        onChange={handleChange}
-                                        className="w-full bg-black border border-gray-700 rounded-lg p-3 focus:border-ted-red focus:outline-none transition-colors appearance-none"
-                                        required
-                                    >
-                                        <option value="">Select your role</option>
-                                        {ROLES.map(role => (
-                                            <option key={role} value={role}>{role}</option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <AnimatePresence>
-                                    {needsTeamRole(formData.role) && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                        >
-                                            <label className="block text-sm text-gray-400 mb-1">Team Position</label>
-                                            <select
-                                                name="teamRole"
-                                                value={formData.teamRole}
-                                                onChange={handleChange}
-                                                className="w-full bg-black border border-gray-700 rounded-lg p-3 focus:border-ted-red focus:outline-none transition-colors appearance-none"
-                                                required
-                                            >
-                                                <option value="">Select position</option>
-                                                {TEAM_ROLES.map(role => (
-                                                    <option key={role} value={role}>{role}</option>
-                                                ))}
-                                            </select>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </>
-                        )}
 
                         <button
                             type="submit"

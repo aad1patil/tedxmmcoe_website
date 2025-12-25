@@ -3,18 +3,24 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// In production, use a service account JSON file.
-// For this demo, we'll try to use default application credentials or a mock setup
-// if the user hasn't provided credentials in .env yet.
+// Check if apps are already initialized to avoid "already exists" error
 if (!admin.apps.length) {
     try {
+        let credential;
+
+        // 1. Try GOOGLE_APPLICATION_CREDENTIALS env var (handled automatically by applicationDefault)
+        // 2. Try looking for 'service-account.json' in the server root if available
+
+        // Note: applicationDefault() automatically checks GOOGLE_APPLICATION_CREDENTIALS
+        // and well-known locations.
+
         admin.initializeApp({
-            credential: admin.credential.applicationDefault(),
-            // Remove the projectId if you want to rely on auto-detection usually
+            credential: admin.credential.applicationDefault()
         });
         console.log("Firebase Admin Initialized");
     } catch (error) {
-        console.error("Firebase Admin Initialization Error (Expected if no credentials):", error);
+        console.error("Firebase Admin Initialization Error:", error);
+        console.error("Please ensure GOOGLE_APPLICATION_CREDENTIALS is set or a service account key is available.");
     }
 }
 
