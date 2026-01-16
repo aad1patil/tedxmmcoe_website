@@ -33,27 +33,30 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install production dependencies for server
+# Create necessary directories
+RUN mkdir -p server
+RUN mkdir -p uploads
+
+# Install production dependencies for server in server directory
+WORKDIR /app/server
 COPY server/package*.json ./
 RUN npm install --production
 
-# Create uploads directory
-RUN mkdir -p uploads
+# Return to app root
+WORKDIR /app
 
-# Copy built server from stage 2
-COPY --from=server-build /app/server/dist ./dist
+# Copy built server from stage 2 to /app/server/dist
+COPY --from=server-build /app/server/dist ./server/dist
 
-# Copy built client from stage 1 to where server expects it
-# Server expects: ../client/dist relative to src/index.ts (which compiles to dist/index.js)
-# So if running from /app/dist/index.js, it looks for /app/client/dist
+# Copy built client from stage 1 to /app/client/dist
 COPY --from=client-build /app/client/dist ./client/dist
 
 # Expose Port
 EXPOSE 5001
 
-# Environment Variables (Defaults, can be overridden by docker-compose)
+# Environment Variables
 ENV PORT=5001
 ENV NODE_ENV=production
 
-# Start Command
-CMD ["node", "dist/index.js"]
+# Start Command (Path relative to /app)
+CMD ["node", "server/dist/index.js"]
