@@ -19,10 +19,10 @@ const PORT = process.env.PORT || 5001;
 
 app.use(cors());
 // Helmet helps secure Express apps with various HTTP headers
-// We need to relax some policies to allow images from our uploads folder if we were using a separate domain,
-// but for same-domain it's usually fine.
+// Disable Content-Security-Policy for now as it blocks Vite's crossorigin scripts
 app.use(helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" }
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: false // Disable CSP to allow React app to load
 }));
 app.use(express.json());
 
