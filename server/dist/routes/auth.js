@@ -8,61 +8,77 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const firebase_1 = require("../config/firebase");
-const authMiddleware_1 = require("../middleware/authMiddleware");
-const router = (0, express_1.Router)();
-// Sync User (Called after Firebase Auth on client)
-// This creates/updates the user document in Firestore with their Role/Team info
-router.post('/sync-user', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Server: /sync-user endpoint hit");
+const express_1 = __importDefault(require("express"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const User_1 = __importDefault(require("../models/User"));
+const router = express_1.default.Router();
+// Generate Token
+const generateToken = (id, role) => {
+    return jsonwebtoken_1.default.sign({ id, role }, process.env.JWT_SECRET || 'secret_key_change_this', {
+        expiresIn: '30d',
+    });
+};
+// @route   POST /api/auth/register
+// @desc    Register a new user
+// @access  Public
+router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, email, password } = req.body;
     try {
-        const { role, teamRole, phone, name, college } = req.body;
-        const { uid, email } = req.user; // Set by verifyToken middleware
-        // Prepare user data
-        const userData = {
+        const userExists = yield User_1.default.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+        const salt = yield bcryptjs_1.default.genSalt(10);
+        const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
+        const user = yield User_1.default.create({
             name,
             email,
-            phone,
-            role,
-            college: college || 'MMCOE', // Default to MMCOE if not provided
-            updatedAt: new Date().toISOString()
-        };
-        if (teamRole) {
-            userData.teamRole = teamRole;
-        }
-        // Store in Firestore "users" collection
-        yield firebase_1.db.collection('users').doc(uid).set(userData, { merge: true });
-        // Ideally, we might set Custom User Claims here for role-based security rules
-        // e.g., await auth.setCustomUserClaims(uid, { role });
-        res.json({
-            success: true,
-            message: 'User synced successfully',
-            user: Object.assign({ id: uid }, userData)
+            password: hashedPassword,
         });
+        if (user) {
+            res.status(201).json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                token: generateToken(user._id.toString(), user.role),
+            });
+        }
+        else {
+            res.status(400).json({ message: 'Invalid user data' });
+        }
     }
-    catch (err) {
-        console.error('Sync Error:', err.message);
-        res.status(500).json({ success: false, message: 'Server Verification Error' });
+    catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }));
-// Get Current User Profile (Protected Route)
-router.get('/me', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// @route   POST /api/auth/login
+// @desc    Auth user & get token
+// @access  Public
+router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
     try {
-        const { uid } = req.user;
-        const userDoc = yield firebase_1.db.collection('users').doc(uid).get();
-        if (!userDoc.exists) {
-            return res.status(404).json({ success: false, message: 'User profile not found' });
+        const user = yield User_1.default.findOne({ email });
+        if (user && (yield bcryptjs_1.default.compare(password, user.password))) {
+            res.json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                token: generateToken(user._id.toString(), user.role),
+            });
         }
-        res.json({
-            success: true,
-            user: Object.assign({ id: uid }, userDoc.data())
-        });
+        else {
+            res.status(401).json({ message: 'Invalid email or password' });
+        }
     }
-    catch (err) {
-        console.error('Profile Error:', err.message);
-        res.status(500).json({ success: false, message: 'Server Error' });
+    catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }));
 exports.default = router;
