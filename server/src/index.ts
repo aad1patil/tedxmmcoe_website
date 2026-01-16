@@ -35,12 +35,27 @@ app.use('/api/registrations', registrationRoutes);
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Serve Frontend (Client)
+import fs from 'fs';
+
+// Serve Frontend (Client)
+// Adjusted for Docker structure: /app/server/dist/index.js -> /app/client/dist
 const clientBuildPath = path.join(__dirname, '../../client/dist');
+console.log('Debug: __dirname:', __dirname);
+console.log('Debug: clientBuildPath:', clientBuildPath);
+console.log('Debug: clientBuildPath exists:', fs.existsSync(clientBuildPath));
+console.log('Debug: index.html exists:', fs.existsSync(path.join(clientBuildPath, 'index.html')));
+
 app.use(express.static(clientBuildPath));
 
 // Handle React Routing (return index.html for all other routes)
 app.get('*', (req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
+    const indexPath = path.join(clientBuildPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        console.error("Critical: index.html not found at", indexPath);
+        res.status(404).send(`Server Error: Client app not found at ${indexPath}. debug: ${__dirname}`);
+    }
 });
 
 app.listen(PORT, () => {
