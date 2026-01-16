@@ -1,8 +1,30 @@
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
 
+import { useEffect, useState } from 'react';
+import { db } from '../firebase';
+import { collection, getCountFromServer } from 'firebase/firestore';
+
 const Register = () => {
+    const [soldOut, setSoldOut] = useState(false);
+
+    useEffect(() => {
+        const checkRegistrations = async () => {
+            try {
+                const coll = collection(db, "registrations");
+                const snapshot = await getCountFromServer(coll);
+                const count = snapshot.data().count;
+                if (count >= 180) {
+                    setSoldOut(true);
+                }
+            } catch (err) {
+                console.error("Error checking registration count:", err);
+            }
+        };
+        checkRegistrations();
+    }, []);
+
     return (
         <div className="bg-ted-black min-h-screen py-20 text-white flex items-center justify-center">
             <div className="container mx-auto px-4">
@@ -19,42 +41,70 @@ const Register = () => {
                             Join 500+ attendees for an unforgettable experience at TEDxMMCOE.
                         </p>
 
-                        <div className="grid md:grid-cols-2 gap-8 mb-12 text-left">
-                            <div className="bg-gray-900 p-8 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors">
-                                <div className="absolute top-0 right-0 p-4 bg-ted-red text-white text-xs font-bold rounded-bl-lg">
-                                    EARLY BIRD
+                        {soldOut && (
+                            <div className="bg-red-500/20 border border-red-500 text-red-500 p-4 rounded-xl mb-8 font-bold text-xl animate-pulse">
+                                🎟️ TICKETS TRULY SOLD OUT! (Limit Reached)
+                            </div>
+                        )}
+
+
+                        <div className="grid md:grid-cols-3 gap-8 mb-12 text-left">
+                            {/* Student Pass (MMCOE) */}
+                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between">
+                                <div>
+                                    <h3 className="text-xl font-bold mb-2">Student Pass</h3>
+                                    <div className="text-3xl font-bold mb-2">₹500</div>
+                                    <p className="text-gray-400 text-sm mb-6">(Only for MMCOE Students/Faculty)</p>
                                 </div>
-                                <h3 className="text-2xl font-bold mb-2">Student Pass</h3>
-                                <div className="text-4xl font-bold mb-6">₹499</div>
-                                <ul className="space-y-3 mb-8 text-gray-400">
-                                    <li className="flex items-center gap-2"><Check size={16} className="text-ted-red" /> Full Event Access</li>
-                                    <li className="flex items-center gap-2"><Check size={16} className="text-ted-red" /> Lunch & Refreshments</li>
-                                    <li className="flex items-center gap-2"><Check size={16} className="text-ted-red" /> Delegate Kit</li>
-                                    <li className="flex items-center gap-2"><Check size={16} className="text-ted-red" /> E-Certificate</li>
-                                </ul>
-                                <button className="w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-200 transition-colors">
-                                    Book Now
-                                </button>
+                                {soldOut ? (
+                                    <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
+                                        Sold Out
+                                    </button>
+                                ) : (
+                                    <Link to="/login" state={{ type: 'ticket', institution: 'MMCOE' }} className="block w-full text-center bg-ted-red text-white font-bold py-3 rounded-lg hover:bg-red-700 transition-colors">
+                                        Register (MMCOE)
+                                    </Link>
+                                )}
                             </div>
 
-                            <div className="bg-gray-900 p-8 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors">
-                                <h3 className="text-2xl font-bold mb-2">Standard Pass</h3>
-                                <div className="text-4xl font-bold mb-6">₹799</div>
-                                <ul className="space-y-3 mb-8 text-gray-400">
-                                    <li className="flex items-center gap-2"><Check size={16} className="text-ted-red" /> Full Event Access</li>
-                                    <li className="flex items-center gap-2"><Check size={16} className="text-ted-red" /> Lunch & Refreshments</li>
-                                    <li className="flex items-center gap-2"><Check size={16} className="text-ted-red" /> Premium Delegate Kit</li>
-                                    <li className="flex items-center gap-2"><Check size={16} className="text-ted-red" /> Networking Session</li>
-                                </ul>
-                                <Link to="/login" className="block w-full text-center bg-ted-red text-white font-bold py-3 rounded-lg hover:bg-red-700 transition-colors">
-                                    Register & Pay
-                                </Link>
+                            {/* Community Pass (Others) */}
+                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between">
+                                <div>
+                                    <h3 className="text-xl font-bold mb-2">Community Pass</h3>
+                                    <div className="text-3xl font-bold mb-2">₹800</div>
+                                    <p className="text-gray-400 text-sm mb-6">(For Other Colleges & External)</p>
+                                </div>
+                                {soldOut ? (
+                                    <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
+                                        Sold Out
+                                    </button>
+                                ) : (
+                                    <Link to="/login" state={{ type: 'ticket', institution: 'Other' }} className="block w-full text-center bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                                        Register (Community)
+                                    </Link>
+                                )}
+                            </div>
+
+                            {/* Team Pass */}
+                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between">
+                                <div>
+                                    <h3 className="text-xl font-bold mb-2">Team Pass</h3>
+                                    <div className="text-3xl font-bold mb-2">₹300</div>
+                                    <p className="text-gray-400 text-sm mb-6">TEDxMMCOE team members registration</p>
+                                </div>
+                                {soldOut ? (
+                                    <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
+                                        Sold Out
+                                    </button>
+                                ) : (
+                                    <Link to="/login" state={{ type: 'team' }} className="block w-full text-center bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-200 transition-colors">
+                                        Register (Team)
+                                    </Link>
+                                )}
                             </div>
                         </div>
 
-                        <p className="text-gray-500 text-sm">
-                            * Payment gateway integration simulated for demo. Clicking 'Register' will take you to the signup flow.
-                        </p>
+
                     </motion.div>
                 </div>
             </div>

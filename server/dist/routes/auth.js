@@ -11,25 +11,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const firebase_1 = require("../config/firebase");
+const authMiddleware_1 = require("../middleware/authMiddleware");
 const router = (0, express_1.Router)();
 // Sync User (Called after Firebase Auth on client)
 // This creates/updates the user document in Firestore with their Role/Team info
-router.post('/sync-user', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/sync-user', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Server: /sync-user endpoint hit");
     try {
-        const { token, role, teamRole, phone, name } = req.body;
-        if (!token) {
-            return res.status(400).json({ success: false, message: 'No token provided' });
-        }
-        // Verify the Firebase Token
-        const decodedToken = yield firebase_1.auth.verifyIdToken(token);
-        const uid = decodedToken.uid;
-        const email = decodedToken.email;
+        const { role, teamRole, phone, name, college } = req.body;
+        const { uid, email } = req.user; // Set by verifyToken middleware
         // Prepare user data
         const userData = {
             name,
             email,
             phone,
             role,
+            college: college || 'MMCOE', // Default to MMCOE if not provided
             updatedAt: new Date().toISOString()
         };
         if (teamRole) {
@@ -47,18 +44,13 @@ router.post('/sync-user', (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
     catch (err) {
         console.error('Sync Error:', err.message);
-        res.status(401).json({ success: false, message: 'Invalid Token or Server Error' });
+        res.status(500).json({ success: false, message: 'Server Verification Error' });
     }
 }));
-// Get Current User Profile (Protected Route example)
-router.get('/me', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+// Get Current User Profile (Protected Route)
+router.get('/me', authMiddleware_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split('Bearer ')[1];
-        if (!token)
-            return res.status(401).json({ success: false, message: 'No token' });
-        const decodedToken = yield firebase_1.auth.verifyIdToken(token);
-        const uid = decodedToken.uid;
+        const { uid } = req.user;
         const userDoc = yield firebase_1.db.collection('users').doc(uid).get();
         if (!userDoc.exists) {
             return res.status(404).json({ success: false, message: 'User profile not found' });
@@ -70,7 +62,7 @@ router.get('/me', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (err) {
         console.error('Profile Error:', err.message);
-        res.status(401).json({ success: false, message: 'Unauthorized' });
+        res.status(500).json({ success: false, message: 'Server Error' });
     }
 }));
 exports.default = router;

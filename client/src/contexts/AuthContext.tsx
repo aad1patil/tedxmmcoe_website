@@ -1,20 +1,21 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import {
-    User,
-    onAuthStateChanged,
-    signOut as firebaseSignOut,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    UserCredential
-} from 'firebase/auth';
-import { auth } from '../firebase';
+import axios from 'axios';
+
+interface User {
+    _id: string;
+    name: string;
+    email: string;
+    role: string;
+    token: string;
+}
 
 interface AuthContextType {
     currentUser: User | null;
     loading: boolean;
-    login: (email: string, password: string) => Promise<UserCredential>;
-    signup: (email: string, password: string) => Promise<UserCredential>;
-    logout: () => Promise<void>;
+    isAdmin: boolean;
+    login: (email: string, password: string) => Promise<void>;
+    signup: (name: string, email: string, password: string) => Promise<void>;
+    logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,31 +27,49 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const storedUser = localStorage.getItem('userInfo');
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
             setCurrentUser(user);
-            setLoading(false);
-        });
-
-        return unsubscribe;
+            setIsAdmin(user.role === 'admin');
+        }
+        setLoading(false);
     }, []);
 
-    const login = (email: string, password: string) => {
-        return signInWithEmailAndPassword(auth, email, password);
+    const login = async (email: string, password: string) => {
+        const { data } = await axios.post(`${import.meta.env.VITE_API_URL || '/api'}/auth/login`, {
+            email,
+            password
+        });
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        setCurrentUser(data);
+        setIsAdmin(data.role === 'admin');
     };
 
-    const signup = (email: string, password: string) => {
-        return createUserWithEmailAndPassword(auth, email, password);
+    const signup = async (name: string, email: string, password: string) => {
+        const { data } = await axios.post(`${import.meta.env.VITE_API_URL || '/api'}/auth/register`, {
+            name,
+            email,
+            password
+        });
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        setCurrentUser(data);
+        setIsAdmin(data.role === 'admin');
     };
 
     const logout = () => {
-        return firebaseSignOut(auth);
+        localStorage.removeItem('userInfo');
+        setCurrentUser(null);
+        setIsAdmin(false);
     };
 
     const value = {
         currentUser,
         loading,
+        isAdmin,
         login,
         signup,
         logout

@@ -15,7 +15,9 @@ const Layout = () => {
             { name: 'Event Details', path: '/event-details' },
             { name: 'Timeline', path: '/timeline' }
         ] : []),
+        { name: 'Merchandise', path: '/merchandise' },
         { name: 'Speakers', path: '/speakers' },
+        ...(currentUser?.email === 'tedxmmcoe@mmcoe.edu.in' ? [{ name: 'Admin', path: '/admin' }] : []),
         ...(!currentUser ? [{ name: 'Login', path: '/login', cta: true }] : []),
         { name: currentUser ? 'Dashboard' : 'Register', path: currentUser ? '/dashboard' : '/register', cta: true },
     ];
@@ -98,9 +100,8 @@ const Layout = () => {
                         This independent TEDx event is operated under license from TED.
                     </p>
                     <div className="flex justify-center space-x-6 text-sm text-gray-400">
-                        <Link to="/login" className="hover:text-white">Staff Login</Link>
-                        <a href="#" className="hover:text-white">Instagram</a>
-                        <a href="#" className="hover:text-white">Twitter</a>
+                        <a href="mailto:tedxmmcoe@mmcoe.edu.in" className="hover:text-white">tedxmmcoe@mmcoe.edu.in</a>
+                        <a href="https://www.instagram.com/tedxmmcoe/" target="_blank" rel="noopener noreferrer" className="hover:text-white">Instagram</a>
                     </div>
                     <p className="text-gray-600 text-xs mt-8">
                         © 2025 TEDxMMCOE. All Rights Reserved.

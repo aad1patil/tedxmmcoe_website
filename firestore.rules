@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Allow authenticated users to create registration records
+    match /registrations/{document} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || request.auth.token.admin == true);
+    }
+    
+    // Allow authenticated users to create merchandise orders
+    match /merchandise_orders/{document} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || request.auth.token.admin == true);
+    }
+    
+    // User profiles are managed by server actions, but allowing read for owner is good practice
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false; // Only server (Admin SDK) should write to user profiles
+    }
+  }
+}

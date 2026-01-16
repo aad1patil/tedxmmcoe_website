@@ -1,66 +1,94 @@
 import { useEffect, useState } from 'react';
-import { db } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
-
+import { utils, writeFile } from 'xlsx';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-interface User {
-    id: string;
+interface Registration {
+    id?: string;
+    userId: string;
     name: string;
     email: string;
-    role: string;
-    teamRole?: string;
-}
-
-interface Registration {
-    userId: string;
+    institution?: string;
     transactionId: string;
     screenshotUrl: string;
+    idCardUrl?: string; // New field for ID card image
     status: string;
+    amount: number;
     timestamp: any;
 }
 
-interface MergedUser extends User {
-    registration?: Registration;
+interface MerchandiseOrder {
+    id?: string;
+    userId: string;
+    name: string;
+    email: string;
+    size: string;
+    transactionId: string;
+    screenshotUrl: string;
+    idCardUrl?: string; // New field for ID card image (optional)
+    status: string;
+    amount: number;
+    timestamp: any;
 }
 
 const AdminDashboard = () => {
-    const [users, setUsers] = useState<MergedUser[]>([]);
+    const [activeTab, setActiveTab] = useState<'registrations' | 'team' | 'merchandise'>('registrations');
+    const [registrations, setRegistrations] = useState<Registration[]>([]);
+    const [merchandise, setMerchandise] = useState<MerchandiseOrder[]>([]);
     const [loading, setLoading] = useState(true);
-    const { currentUser } = useAuth()!;
+    const [error, setError] = useState<string | null>(null);
+    const { currentUser, isAdmin } = useAuth()!;
     const navigate = useNavigate();
+
+    // Derived state for filtered registrations
+    const individualRegistrations = registrations.filter((r: any) => r.ticketCategory !== 'team');
+    const teamRegistrations = registrations.filter((r: any) => r.ticketCategory === 'team');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch all users
-                const usersSnap = await getDocs(collection(db, "users"));
-                const usersMap = new Map<string, User>();
-                usersSnap.forEach(doc => {
-                    usersMap.set(doc.id, { id: doc.id, ...doc.data() } as User);
-                });
-
-                // Fetch all registrations
-                const regsSnap = await getDocs(collection(db, "registrations"));
-                const regsMap = new Map<string, Registration>();
-                regsSnap.forEach(doc => {
-                    const data = doc.data() as Registration;
-                    regsMap.set(data.userId, data);
-                });
-
-                // Merge data
-                const merged: MergedUser[] = [];
-                usersMap.forEach((user) => {
-                    merged.push({
-                        ...user,
-                        registration: regsMap.get(user.id)
+                if (isAdmin && currentUser) {
+                    const apiUrl = import.meta.env.VITE_API_URL || '/api';
+                    const response = await fetch(`${apiUrl}/admin/registrations`, {
+                        headers: {
+                            'Authorization': `Bearer ${currentUser.token}`
+                        }
                     });
-                });
 
-                setUsers(merged);
+                    if (response.status === 403 || response.status === 401) {
+                        setError("Access Denied: You do not have admin permissions.");
+                        setLoading(false);
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(`Server returned ${response.status} ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+
+                    // Simplify data handling, assuming data is the array
+                    if (Array.isArray(data)) {
+                        setRegistrations(data);
+                        // Merchandise is mixed in or filtering logic needs update?
+                        // Actually, my mongo implementation mixed them all in Registrations collection.
+                        // I need to filter them here or in backend.
+                        // In backend, I returned all.
+                        // so registrations includes merchandise types too.
+                        const merch = data.filter((r: any) => r.type === 'merchandise');
+                        const regs = data.filter((r: any) => r.type !== 'merchandise');
+                        setRegistrations(regs);
+                        setMerchandise(merch);
+                    } else {
+                        setError("Failed to load data");
+                    }
+                } else if (currentUser) {
+                    setError("Access Denied: Admin privileges required.");
+                    setLoading(false);
+                }
             } catch (error) {
                 console.error("Error fetching admin data: ", error);
+                setError("Failed to fetch data. Ensure server is running.");
             } finally {
                 setLoading(false);
             }
@@ -68,115 +96,219 @@ const AdminDashboard = () => {
 
         if (currentUser) {
             fetchData();
+        } else {
+            setLoading(false);
         }
-    }, [currentUser]);
+    }, [currentUser, isAdmin]);
 
+    if (loading) return <div className="min-h-screen bg-ted-black flex items-center justify-center text-white">Loading Admin Data...</div>;
 
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+                <div className="bg-white p-8 rounded shadow text-center">
+                    <h2 className="text-red-600 font-bold text-xl mb-2">Error</h2>
+                    <p className="text-gray-700">{error}</p>
+                    <button onClick={() => window.location.reload()} className="mt-4 px-4 py-2 bg-ted-red text-white rounded">Retry</button>
+                    <button onClick={() => navigate('/')} className="mt-4 ml-4 px-4 py-2 text-gray-600 hover:text-black">Go Home</button>
+                </div>
+            </div>
+        );
+    }
 
-    if (loading) {
-        return <div className="min-h-screen bg-ted-black flex items-center justify-center text-white">Loading Admin Data...</div>;
+    const StatusBadge = ({ status }: { status: string }) => (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
+            ${status === 'verified' ? 'bg-green-100 text-green-800' :
+                status === 'rejected' ? 'bg-red-100 text-red-800' :
+                    'bg-yellow-100 text-yellow-800'}`}>
+            {status === 'pending' ? 'Pending' : status}
+        </span>
+    );
+
+    const ScreenshotThumb = ({ url, label }: { url: string, label: string }) => (
+        <a href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:opacity-80 transition-opacity mr-2">
+            <img src={url} alt={label} className="h-10 w-auto rounded border border-gray-200" />
+            <span className='text-xs text-blue-600 underline'>{label}</span>
+        </a>
+    );
+
+    const getDataToDisplay = () => {
+        if (activeTab === 'registrations') return individualRegistrations;
+        if (activeTab === 'team') return teamRegistrations;
+        return merchandise;
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 text-gray-900 font-sans">
-            <div className="flex bg-white shadow-sm border-b border-gray-200">
-                <div className="p-4 w-64 border-r border-gray-200 bg-gray-50">
-                    <h1 className="text-xl font-bold text-ted-red">TEDx Admin</h1>
-                </div>
-                <div className="flex-1 p-4 flex justify-between items-center">
-                    <h2 className="font-semibold text-lg">User Registry</h2>
-                    <button onClick={() => navigate('/dashboard')} className="text-sm text-gray-500 hover:text-black">
-                        Back to App
-                    </button>
-                </div>
-            </div>
+        <div className="min-h-screen bg-gray-100 text-gray-900 font-sans flex flex-col">
+            {/* Header */}
+            <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center h-16">
+                        <div className="flex items-center">
+                            <h1 className="text-xl font-bold text-ted-red">TEDx Admin</h1>
+                            <span className="ml-4 px-3 py-1 bg-gray-100 text-xs font-mono rounded-full text-gray-600">
+                                {isAdmin ? 'Root Access' : 'Read Only'}
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => {
+                                    const dataToExport = getDataToDisplay();
 
-            <div className="flex">
-                {/* Sidebar */}
-                <div className="w-64 bg-white h-[calc(100vh-64px)] border-r border-gray-200 hidden md:block">
-                    <nav className="p-4 space-y-1">
-                        <button className="w-full text-left px-4 py-2 bg-red-50 text-ted-red font-medium rounded-md">
-                            All Users
-                        </button>
-                        {/* Add more admin links here */}
-                    </nav>
-                </div>
+                                    // Prepare data for Excel
+                                    const excelData = dataToExport.map(item => {
+                                        const dateObj = item.timestamp?.seconds ? new Date(item.timestamp.seconds * 1000) : null;
 
-                {/* Main Content */}
-                <div className="flex-1 p-8 overflow-auto h-[calc(100vh-64px)]">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm">
-                                <thead className="bg-gray-50 text-gray-500 font-medium border-b border-gray-200">
-                                    <tr>
-                                        <th className="px-6 py-4">User Details</th>
-                                        <th className="px-6 py-4">Role</th>
-                                        <th className="px-6 py-4">Payment Status</th>
-                                        <th className="px-6 py-4">Transaction ID</th>
-                                        <th className="px-6 py-4">Screenshot</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-100">
-                                    {users.map((user) => (
-                                        <tr key={user.id} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-6 py-4">
-                                                <div>
-                                                    <p className="font-semibold text-gray-900">{user.name}</p>
-                                                    <p className="text-xs text-gray-500">{user.email}</p>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                                                    {user.role} {user.teamRole ? `(${user.teamRole})` : ''}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {user.registration ? (
-                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
-                                                        ${user.registration.status === 'verified' ? 'bg-green-100 text-green-800' :
-                                                            user.registration.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                                                                'bg-yellow-100 text-yellow-800'}`}>
-                                                        {user.registration.status === 'pending' ? 'Paid (Pending)' : user.registration.status}
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-gray-400 italic">Not Registered</span>
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-4 font-mono text-gray-600">
-                                                {user.registration ? user.registration.transactionId : '-'}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {user.registration ? (
-                                                    <a
-                                                        href={user.registration.screenshotUrl}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="inline-block"
-                                                    >
-                                                        <img
-                                                            src={user.registration.screenshotUrl}
-                                                            alt="Proof"
-                                                            className="h-12 w-auto rounded border border-gray-200 hover:scale-150 transition-transform origin-left"
-                                                        />
-                                                    </a>
-                                                ) : '-'}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {users.length === 0 && (
-                                        <tr>
-                                            <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-                                                No users found.
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                        const baseData: any = {
+                                            'Status': item.status,
+                                            'Name': item.name,
+                                            'Email': item.email,
+                                            'Amount': item.amount,
+                                            'Transaction ID': item.transactionId,
+                                            'Upload Date': dateObj ? dateObj.toLocaleDateString('en-IN') : 'N/A',
+                                            'Upload Time': dateObj ? dateObj.toLocaleTimeString('en-IN') : 'N/A',
+                                            'Proof URL': item.screenshotUrl,
+                                            'ID Card URL': item.idCardUrl || 'N/A' // Added ID Card URL
+                                        };
+
+                                        if (activeTab === 'registrations') {
+                                            baseData['Institution'] = (item as any).institution || 'N/A';
+                                        } else if (activeTab === 'team') {
+                                            baseData['Category'] = 'Team Pass';
+                                        } else {
+                                            baseData['Size'] = (item as MerchandiseOrder).size || 'N/A';
+                                        }
+                                        return baseData;
+                                    });
+
+                                    const ws = utils.json_to_sheet(excelData);
+                                    const wb = utils.book_new();
+                                    utils.book_append_sheet(wb, ws, activeTab === 'registrations' ? 'Individual' : (activeTab === 'team' ? 'Team' : 'Merchandise'));
+
+                                    writeFile(wb, `${activeTab}_${new Date().toISOString().split('T')[0]}.xlsx`);
+                                }}
+                                className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+                            >
+                                <span>Download Excel</span>
+                            </button>
+                            <button onClick={() => navigate('/dashboard')} className="text-sm text-gray-600 hover:text-black font-medium">
+                                Exit Dashboard
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            {/* Main Content */}
+            <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-h-[600px] flex flex-col">
+                    {/* Tabs */}
+                    <div className="border-b border-gray-200 flex">
+                        <button
+                            onClick={() => setActiveTab('registrations')}
+                            className={`px-8 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'registrations'
+                                ? 'border-ted-red text-ted-red bg-red-50/50'
+                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                }`}
+                        >
+                            Individual ({individualRegistrations.length})
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('team')}
+                            className={`px-8 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'team'
+                                ? 'border-ted-red text-ted-red bg-red-50/50'
+                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                }`}
+                        >
+                            Team ({teamRegistrations.length})
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('merchandise')}
+                            className={`px-8 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'merchandise'
+                                ? 'border-ted-red text-ted-red bg-red-50/50'
+                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                }`}
+                        >
+                            Merchandise ({merchandise.length})
+                        </button>
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 overflow-auto">
+                        <table className="w-full text-left text-sm">
+                            <thead className="bg-gray-50 text-gray-500 font-medium border-b border-gray-200 sticky top-0">
+                                <tr>
+                                    <th className="px-6 py-4">Status</th>
+                                    <th className="px-6 py-4">Name / Email</th>
+                                    <th className="px-6 py-4">Transaction Details</th>
+                                    {activeTab === 'registrations' ? (
+                                        <th className="px-6 py-4">Institution</th>
+                                    ) : activeTab === 'team' ? (
+                                        <th className="px-6 py-4">Type</th>
+                                    ) : (
+                                        <th className="px-6 py-4">Size</th>
+                                    )}
+                                    <th className="px-6 py-4">Proofs (Payment | ID)</th>
+                                    <th className="px-6 py-4 text-right">Upload Date/Time</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-100">
+                                {getDataToDisplay().map((item) => (
+                                    <tr key={item.id || item.transactionId} className="hover:bg-gray-50 transition-colors">
+                                        <td className="px-6 py-4">
+                                            <StatusBadge status={item.status} />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="font-semibold text-gray-900">{item.name}</div>
+                                            <div className="text-xs text-gray-500">{item.email}</div>
+                                        </td>
+                                        <td className="px-6 py-4 font-mono text-gray-600">
+                                            <div>{item.transactionId}</div>
+                                            <div className="text-xs text-gray-400">₹{item.amount}</div>
+                                        </td>
+                                        {activeTab === 'registrations' ? (
+                                            <td className="px-6 py-4">
+                                                {(item as Registration).institution}
+                                            </td>
+                                        ) : activeTab === 'team' ? (
+                                            <td className="px-6 py-4 font-bold text-gray-500">
+                                                Team Pass
+                                            </td>
+                                        ) : (
+                                            <td className="px-6 py-4 font-bold">
+                                                {(item as MerchandiseOrder).size}
+                                            </td>
+                                        )}
+                                        <td className="px-6 py-4">
+                                            <div className="flex flex-col gap-2">
+                                                <ScreenshotThumb url={item.screenshotUrl} label="Payment" />
+                                                {item.idCardUrl && <ScreenshotThumb url={item.idCardUrl} label="ID" />}
+                                                {!item.idCardUrl && <span className="text-xs text-gray-400">No ID Card</span>}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-right text-xs">
+                                            <div className="font-medium text-gray-900">
+                                                {item.timestamp?.seconds ? new Date(item.timestamp.seconds * 1000).toLocaleDateString('en-IN') : 'N/A'}
+                                            </div>
+                                            <div className="text-gray-500">
+                                                {item.timestamp?.seconds ? new Date(item.timestamp.seconds * 1000).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : ''}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {getDataToDisplay().length === 0 && (
+                                    <tr>
+                                        <td colSpan={6} className="px-6 py-12 text-center text-gray-400 italic">
+                                            No {activeTab} found.
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div >
     );
 };
 

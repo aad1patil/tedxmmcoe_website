@@ -50,7 +50,7 @@ const EventDetails = () => {
                                 Pune, Maharashtra 411052
                             </p>
                             <a
-                                href="https://maps.google.com"
+                                href="https://share.google/hPNLrtBmR4YofXPrX"
                                 target="_blank"
                                 rel="noreferrer"
                                 className="inline-block w-full text-center bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-lg transition-colors"
@@ -63,12 +63,12 @@ const EventDetails = () => {
                     <div className="bg-gray-900 p-8 rounded-2xl border border-gray-800">
                         <h3 className="text-2xl font-bold mb-6 text-center">About the Theme</h3>
                         <p className="text-gray-300 leading-relaxed text-center max-w-2xl mx-auto">
-                            "Uncharted Horizons" explores the unknown territories of technology, art, and human resilience. It's about looking beyond what we know and embracing the infinite possibilities that lie ahead.
+                            "A mirror is more than just a reflection. It is an encounter, a revelation, and sometimes a distortion. When standing before the mirror, we are forced to meet our true selves: our desires and doubts, our perfections and imperfections, our hopes and hesitations. Aaina - meaning mirror - offers more than a reflection; it becomes a metaphor for the journey of self-discovery, resilience and transformation."
                         </p>
                     </div>
                 </motion.div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

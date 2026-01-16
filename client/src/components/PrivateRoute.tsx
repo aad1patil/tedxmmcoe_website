@@ -10,7 +10,7 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
 
     if (!auth) return null; // Should not happen if wrapped in AuthProvider
 
-    if (!auth.currentUser) {
+    if (!auth.currentUser && !auth.isAdmin) {
         return <Navigate to="/login" />;
     }
 

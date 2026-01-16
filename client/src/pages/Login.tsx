@@ -14,7 +14,8 @@ const Login = () => {
         phone: '',
         password: '',
         role: 'Attendee',
-        teamRole: ''
+        teamRole: '',
+        college: 'MMCOE'
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -27,69 +28,25 @@ const Login = () => {
     }, [currentUser, navigate]);
 
     const handleChange = (e: any) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({ ...formData, [e.target.name]: e.target.name === 'email' ? e.target.value.trim() : e.target.value });
     };
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         setError('');
         setLoading(true);
-        console.log("Starting Authentication Process...");
-        console.log("Form Data:", { ...formData, password: '[REDACTED]' });
 
         try {
-            let userCredential;
             if (isLogin) {
-                // Login
-                console.log("Attempting Firebase SignIn...");
-                userCredential = await login(formData.email, formData.password);
-                console.log("Firebase SignIn Success:", userCredential.user.uid);
+                await login(formData.email, formData.password);
             } else {
-                // Register
-                console.log("Attempting Firebase Call (CreateUser)...");
-                userCredential = await signup(formData.email, formData.password);
-                console.log("Firebase CreateUser Success:", userCredential.user.uid);
+                await signup(formData.name, formData.email, formData.password);
             }
-
-            console.log("Getting ID Token...");
-            const token = await userCredential.user.getIdToken();
-            console.log("ID Token retrieved (first 10 chars):", token.substring(0, 10) + "...");
-
-            // If registering, sync extra details to our backend
-            if (!isLogin) {
-                console.log("Attempting Server Sync to http://localhost:5001/api/auth/sync-user ...");
-                const syncResponse = await axios.post('http://localhost:5001/api/auth/sync-user', {
-                    name: formData.name,
-                    phone: formData.phone,
-                    role: formData.role,
-                    teamRole: formData.teamRole
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                console.log("Server Sync Success:", syncResponse.data);
-            }
-
-            // Navigate handled by useEffect or here
-            console.log("Navigating to Dashboard...");
             navigate('/dashboard');
 
         } catch (err: any) {
             console.error("Authentication Error Details:", err);
-
-            // Improve error message display
-            let errorMessage = "An error occurred";
-            if (err.code) {
-                errorMessage = `Firebase Error: ${err.code}`;
-            } else if (err.response) {
-                errorMessage = `Server Error: ${err.response.status} - ${err.response.data.message || err.response.statusText}`;
-            } else {
-                errorMessage = err.message;
-            }
-
-            console.error("Constructed Error Message:", errorMessage);
-            setError(errorMessage);
+            setError(err.response?.data?.message || err.message || "An error occurred");
         } finally {
             setLoading(false);
         }
@@ -141,6 +98,19 @@ const Login = () => {
                                         placeholder="+91 98765 43210"
                                         required
                                     />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-gray-400 mb-1">College / Institution</label>
+                                    <select
+                                        name="college"
+                                        value={formData.college}
+                                        onChange={handleChange}
+                                        className="w-full bg-black border border-gray-700 rounded-lg p-3 focus:border-ted-red focus:outline-none transition-colors text-white"
+                                        required
+                                    >
+                                        <option value="MMCOE">MMCOE (Marathwada Mitra Mandal's College of Engineering)</option>
+                                        <option value="Other">Other College / External</option>
+                                    </select>
                                 </div>
                             </>
                         )}

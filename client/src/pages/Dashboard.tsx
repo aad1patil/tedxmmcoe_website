@@ -1,34 +1,34 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { currentUser, logout } = useAuth()!;
     const [userProfile, setUserProfile] = useState<any>(null);
 
+    // ... existing useEffect ... 
+
     useEffect(() => {
         if (!currentUser) {
-            // PrivateRoute should handle this, but double check
             return;
         }
 
         const fetchProfile = async () => {
             try {
                 const token = await currentUser.getIdToken();
-                // TODO: use env var for URL
-                const res = await axios.get('http://localhost:5001/api/auth/me', {
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+                const res = await axios.get(`${apiUrl}/api/auth/me`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUserProfile(res.data.user);
             } catch (err) {
                 console.error("Failed to fetch profile", err);
-                // Optional: handle error state
             }
         };
-
         fetchProfile();
     }, [currentUser]);
 
@@ -148,6 +148,32 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Success Notification */}
+                {location.state?.successMessage && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -50 }}
+                        className="fixed top-24 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3"
+                    >
+                        <div className="bg-white/20 p-2 rounded-full">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 className="font-bold">Success!</h4>
+                            <p className="text-sm">{location.state.successMessage}</p>
+                        </div>
+                        <button
+                            onClick={() => navigate('.', { state: {} })}
+                            className="ml-4 text-white/50 hover:text-white"
+                        >
+                            ✕
+                        </button>
+                    </motion.div>
+                )}
             </div>
         </div>
     );

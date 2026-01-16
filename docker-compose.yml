@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "80:5001"
+    environment:
+      - PORT=5001
+      - MONGO_URI=mongodb://mongo:27017/tedxmmcoe
+      - JWT_SECRET=change_this_secret_in_production
+      - NODE_ENV=production
+    depends_on:
+      - mongo
+    volumes:
+      - ./uploads:/app/uploads
+    restart: always
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017" # Optional: Only needed if you want to connect from host
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+
+volumes:
+  mongo-data:

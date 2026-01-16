@@ -1,66 +1,77 @@
-import { Router, Request, Response } from 'express';
-import { db } from '../config/firebase';
-import { verifyToken } from '../middleware/authMiddleware';
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from '../models/User';
 
-const router = Router();
+const router = express.Router();
 
-// Sync User (Called after Firebase Auth on client)
-// This creates/updates the user document in Firestore with their Role/Team info
-router.post('/sync-user', verifyToken, async (req: Request, res: Response) => {
-    console.log("Server: /sync-user endpoint hit");
+// Generate Token
+const generateToken = (id: string, role: string) => {
+    return jwt.sign({ id, role }, process.env.JWT_SECRET || 'secret_key_change_this', {
+        expiresIn: '30d',
+    });
+};
+
+// @route   POST /api/auth/register
+// @desc    Register a new user
+// @access  Public
+router.post('/register', async (req, res) => {
+    const { name, email, password } = req.body;
+
     try {
-        const { role, teamRole, phone, name } = req.body;
-        const { uid, email } = req.user; // Set by verifyToken middleware
+        const userExists = await User.findOne({ email });
 
-        // Prepare user data
-        const userData: any = {
-            name,
-            email,
-            phone,
-            role,
-            updatedAt: new Date().toISOString()
-        };
-
-        if (teamRole) {
-            userData.teamRole = teamRole;
+        if (userExists) {
+            return res.status(400).json({ message: 'User already exists' });
         }
 
-        // Store in Firestore "users" collection
-        await db.collection('users').doc(uid).set(userData, { merge: true });
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Ideally, we might set Custom User Claims here for role-based security rules
-        // e.g., await auth.setCustomUserClaims(uid, { role });
-
-        res.json({
-            success: true,
-            message: 'User synced successfully',
-            user: { id: uid, ...userData }
+        const user = await User.create({
+            name,
+            email,
+            password: hashedPassword,
         });
 
-    } catch (err: any) {
-        console.error('Sync Error:', err.message);
-        res.status(500).json({ success: false, message: 'Server Verification Error' });
+        if (user) {
+            res.status(201).json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                token: generateToken(user._id.toString(), user.role),
+            });
+        } else {
+            res.status(400).json({ message: 'Invalid user data' });
+        }
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
     }
 });
 
-// Get Current User Profile (Protected Route)
-router.get('/me', verifyToken, async (req: Request, res: Response) => {
+// @route   POST /api/auth/login
+// @desc    Auth user & get token
+// @access  Public
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
     try {
-        const { uid } = req.user;
+        const user = await User.findOne({ email });
 
-        const userDoc = await db.collection('users').doc(uid).get();
-        if (!userDoc.exists) {
-            return res.status(404).json({ success: false, message: 'User profile not found' });
+        if (user && (await bcrypt.compare(password, user.password))) {
+            res.json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                token: generateToken(user._id.toString(), user.role),
+            });
+        } else {
+            res.status(401).json({ message: 'Invalid email or password' });
         }
-
-        res.json({
-            success: true,
-            user: { id: uid, ...userDoc.data() }
-        });
-
-    } catch (err: any) {
-        console.error('Profile Error:', err.message);
-        res.status(500).json({ success: false, message: 'Server Error' });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
     }
 });
 

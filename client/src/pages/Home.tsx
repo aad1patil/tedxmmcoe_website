@@ -35,12 +35,17 @@ const Home = () => {
                         <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-12">
                             <div className="flex items-center gap-2 text-gray-300">
                                 <Calendar className="text-ted-red" />
-                                <span>January 31, 2025</span>
+                                <span>January 31, 2026</span>
                             </div>
-                            <div className="flex items-center gap-2 text-gray-300">
+                            <a
+                                href="https://share.google/ryG58p146EqNqs4Gh"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-gray-300 hover:text-ted-red transition-colors"
+                            >
                                 <MapPin className="text-ted-red" />
                                 <span>IMERT Hall, MMCOE</span>
-                            </div>
+                            </a>
                         </div>
 
                         <div className="flex flex-col md:flex-row justify-center gap-4">

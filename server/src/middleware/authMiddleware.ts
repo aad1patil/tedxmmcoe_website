@@ -1,32 +1,42 @@
+import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { auth } from '../config/firebase';
 
-// Extend Express Request type to include user
+// Extend Express Request to include user
 declare global {
     namespace Express {
         interface Request {
-            user?: any; // Replace 'any' with a more specific type if desired
+            user?: any;
         }
     }
 }
 
-export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
+export const protect = (req: Request, res: Response, next: NextFunction) => {
+    let token;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        res.status(401).json({ error: 'Unauthorized: No token provided' });
-        return;
+    if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer')
+    ) {
+        try {
+            token = req.headers.authorization.split(' ')[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_key_change_this');
+            req.user = decoded;
+            next();
+        } catch (error) {
+            console.error(error);
+            res.status(401).json({ message: 'Not authorized, token failed' });
+        }
     }
 
-    const token = authHeader.split('Bearer ')[1];
+    if (!token) {
+        res.status(401).json({ message: 'Not authorized, no token' });
+    }
+};
 
-    try {
-        const decodedToken = await auth.verifyIdToken(token);
-        req.user = decodedToken;
+export const admin = (req: Request, res: Response, next: NextFunction) => {
+    if (req.user && req.user.role === 'admin') {
         next();
-    } catch (error) {
-        console.error('Error verifying token:', error);
-        res.status(403).json({ error: 'Unauthorized: Invalid token' });
-        return;
+    } else {
+        res.status(401).json({ message: 'Not authorized as an admin' });
     }
 };

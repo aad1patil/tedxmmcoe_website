@@ -14,9 +14,24 @@ if (!admin.apps.length) {
         // Note: applicationDefault() automatically checks GOOGLE_APPLICATION_CREDENTIALS
         // and well-known locations.
 
-        admin.initializeApp({
-            credential: admin.credential.applicationDefault()
-        });
+        if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+            try {
+                const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+                admin.initializeApp({
+                    credential: admin.credential.cert(serviceAccount)
+                });
+            } catch (e) {
+                console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT:", e);
+                // Fallback
+                admin.initializeApp({
+                    credential: admin.credential.applicationDefault()
+                });
+            }
+        } else {
+            admin.initializeApp({
+                credential: admin.credential.applicationDefault()
+            });
+        }
         console.log("Firebase Admin Initialized");
     } catch (error) {
         console.error("Firebase Admin Initialization Error:", error);

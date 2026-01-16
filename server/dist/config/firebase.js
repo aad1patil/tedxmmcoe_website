@@ -15,9 +15,26 @@ if (!firebase_admin_1.default.apps.length) {
         // 2. Try looking for 'service-account.json' in the server root if available
         // Note: applicationDefault() automatically checks GOOGLE_APPLICATION_CREDENTIALS
         // and well-known locations.
-        firebase_admin_1.default.initializeApp({
-            credential: firebase_admin_1.default.credential.applicationDefault()
-        });
+        if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+            try {
+                const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+                firebase_admin_1.default.initializeApp({
+                    credential: firebase_admin_1.default.credential.cert(serviceAccount)
+                });
+            }
+            catch (e) {
+                console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT:", e);
+                // Fallback
+                firebase_admin_1.default.initializeApp({
+                    credential: firebase_admin_1.default.credential.applicationDefault()
+                });
+            }
+        }
+        else {
+            firebase_admin_1.default.initializeApp({
+                credential: firebase_admin_1.default.credential.applicationDefault()
+            });
+        }
         console.log("Firebase Admin Initialized");
     }
     catch (error) {
