@@ -19,7 +19,7 @@ const Dashboard = () => {
 
         const fetchProfile = async () => {
             try {
-                const token = await currentUser.getIdToken();
+                const token = currentUser.token;
                 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
                 const res = await axios.get(`${apiUrl}/api/auth/me`, {
                     headers: { Authorization: `Bearer ${token}` }
@@ -62,7 +62,7 @@ const Dashboard = () => {
                 >
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">
                         <span className="text-white">Welcome, </span>
-                        <span className="text-ted-red">{userProfile ? userProfile.name : (currentUser?.displayName || 'Innovator')}</span>
+                        <span className="text-ted-red">{userProfile ? userProfile.name : (currentUser?.name || 'Innovator')}</span>
                     </h1>
                     <p className="text-xl text-gray-400 max-w-2xl">
                         We are thrilled to have you as part of the <span className="text-white font-semibold">TEDxMMCOE</span> community.

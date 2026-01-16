@@ -22,6 +22,17 @@ const storage = multer.diskStorage({
     },
 });
 
+// @route   GET /api/registrations/count
+// @desc    Get total registration count (Public)
+router.get('/count', async (req, res) => {
+    try {
+        const count = await Registration.countDocuments({ type: { $ne: 'merchandise' } });
+        res.json({ count });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 const upload = multer({
     storage: storage,
     limits: {

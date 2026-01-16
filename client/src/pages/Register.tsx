@@ -1,10 +1,7 @@
 import { motion } from 'framer-motion';
-
 import { Link } from 'react-router-dom';
-
 import { useEffect, useState } from 'react';
-import { db } from '../firebase';
-import { collection, getCountFromServer } from 'firebase/firestore';
+import axios from 'axios';
 
 const Register = () => {
     const [soldOut, setSoldOut] = useState(false);
@@ -12,10 +9,9 @@ const Register = () => {
     useEffect(() => {
         const checkRegistrations = async () => {
             try {
-                const coll = collection(db, "registrations");
-                const snapshot = await getCountFromServer(coll);
-                const count = snapshot.data().count;
-                if (count >= 180) {
+                const apiUrl = import.meta.env.VITE_API_URL || '/api';
+                const { data } = await axios.get(`${apiUrl}/registrations/count`);
+                if (data.count >= 180) {
                     setSoldOut(true);
                 }
             } catch (err) {
