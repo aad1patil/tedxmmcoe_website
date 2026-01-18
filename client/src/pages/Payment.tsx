@@ -200,7 +200,7 @@ const Payment = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm text-gray-400 mb-2">ID Card / Verification Proof</label>
+                            <label className="block text-sm text-gray-400 mb-2">College ID Card</label>
                             <div className="border-2 border-dashed border-gray-700 rounded-xl p-8 text-center hover:border-ted-red transition-colors cursor-pointer relative">
                                 <input
                                     type="file"
@@ -225,6 +225,10 @@ const Payment = () => {
                         >
                             {uploading ? 'Uploading...' : `Pay ₹${amount} & Submit`}
                         </button>
+
+                        <p className="text-center text-sm text-gray-400 mt-4">
+                            For any upload/payment related issues, contact <span className="text-white font-medium">Aadi Patil - 9834925993</span>
+                        </p>
                     </form>
                 </motion.div>
             </div>
