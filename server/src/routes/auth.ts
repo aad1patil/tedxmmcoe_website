@@ -5,9 +5,12 @@ import User from '../models/User';
 
 const router = express.Router();
 
+// Only this email can be admin
+const ADMIN_EMAIL = 'tedxmmcoe@mmcoe.edu.in';
+
 // Generate Token
-const generateToken = (id: string, role: string) => {
-    return jwt.sign({ id, role }, process.env.JWT_SECRET || 'secret_key_change_this', {
+const generateToken = (id: string, role: string, email: string, name: string) => {
+    return jwt.sign({ id, role, email, name }, process.env.JWT_SECRET || 'secret_key_change_this', {
         expiresIn: '30d',
     });
 };
@@ -28,10 +31,14 @@ router.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        // Auto-assign admin role ONLY for the specific admin email
+        const role = email === ADMIN_EMAIL ? 'admin' : 'user';
+
         const user = await User.create({
             name,
             email,
             password: hashedPassword,
+            role,
         });
 
         if (user) {
@@ -40,7 +47,7 @@ router.post('/register', async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                token: generateToken(user._id.toString(), user.role),
+                token: generateToken(user._id.toString(), user.role, user.email, user.name),
             });
         } else {
             res.status(400).json({ message: 'Invalid user data' });
@@ -65,7 +72,7 @@ router.post('/login', async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                token: generateToken(user._id.toString(), user.role),
+                token: generateToken(user._id.toString(), user.role, user.email, user.name),
             });
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
