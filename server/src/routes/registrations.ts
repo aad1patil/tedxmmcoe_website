@@ -3,6 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import Registration from '../models/Registration';
+import User from '../models/User';
 import { protect } from '../middleware/authMiddleware';
 
 const router = express.Router();
@@ -63,20 +64,27 @@ router.post('/', protect, uploadFields, async (req: any, res) => {
             return res.status(400).json({ message: 'Both Payment Screenshot and ID Card are required.' });
         }
 
-        // Check for limit (180)
-        // Note: For high performance, this count check might need optimization, but fine for 180.
+        // Check for limit (160)
         const count = await Registration.countDocuments({ type: { $ne: 'merchandise' } });
-        if (type !== 'merchandise' && count >= 180) {
+        if (type !== 'merchandise' && count >= 160) {
             // Delete uploaded files if limit reached
             fs.unlinkSync(req.files.screenshot[0].path);
             fs.unlinkSync(req.files.idCard[0].path);
-            return res.status(400).json({ message: 'Registration full.' });
+            return res.status(400).json({ message: 'Registrations are now closed. Maximum capacity reached.' });
+        }
+
+        // Fetch user from database to get the most up-to-date name
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            fs.unlinkSync(req.files.screenshot[0].path);
+            fs.unlinkSync(req.files.idCard[0].path);
+            return res.status(404).json({ message: 'User not found' });
         }
 
         const registration = await Registration.create({
             userId: req.user.id,
-            name: req.user.name || 'Unknown', // Ideally fetch from User model if not in token
-            email: req.user.email, // Ideally fetch from User model if not in token
+            name: user.name,
+            email: user.email,
             transactionId,
             screenshotPath: req.files.screenshot[0].path,
             idCardPath: req.files.idCard[0].path,
