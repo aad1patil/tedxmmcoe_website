@@ -42,7 +42,7 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedImage, setSelectedImage] = useState<string | null>(null); // For image modal
-    const [sendingEmailId, setSendingEmailId] = useState<string | null>(null); // Track which email is being sent
+
     const { currentUser, isAdmin } = useAuth()!;
     const navigate = useNavigate();
 
@@ -168,33 +168,7 @@ const AdminDashboard = () => {
         }
     };
 
-    // Handler to send confirmation email
-    const handleSendEmail = async (registrationId: string, email: string) => {
-        if (!confirm(`Send confirmation email to ${email}?`)) return;
 
-        setSendingEmailId(registrationId);
-        try {
-            const apiUrl = import.meta.env.VITE_API_URL || '/api';
-            const response = await fetch(`${apiUrl}/admin/send-email/${registrationId}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${currentUser?.token}`
-                }
-            });
-
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || 'Failed to send email');
-            }
-
-            alert(`✅ Confirmation email sent to ${email}`);
-        } catch (error: any) {
-            console.error('Error sending email:', error);
-            alert(`❌ Failed to send email: ${error.message}`);
-        } finally {
-            setSendingEmailId(null);
-        }
-    };
 
     const StatusDropdown = ({ id, status }: { id: string, status: string }) => (
         <select
@@ -429,7 +403,7 @@ const AdminDashboard = () => {
                                         )}
                                         <th className="px-6 py-4">Proofs (Payment | ID)</th>
                                         <th className="px-6 py-4">Upload Date/Time</th>
-                                        <th className="px-6 py-4 text-center">Actions</th>
+
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
@@ -474,38 +448,12 @@ const AdminDashboard = () => {
                                                     {item.createdAt ? new Date(item.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : (item.timestamp?.seconds ? new Date(item.timestamp.seconds * 1000).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '')}
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <button
-                                                    onClick={() => handleSendEmail(item._id || item.id || '', item.email)}
-                                                    disabled={sendingEmailId === (item._id || item.id)}
-                                                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 mx-auto
-                                                        ${sendingEmailId === (item._id || item.id)
-                                                            ? 'bg-gray-200 text-gray-500 cursor-wait'
-                                                            : 'bg-blue-500 text-white hover:bg-blue-600 cursor-pointer'}`}
-                                                >
-                                                    {sendingEmailId === (item._id || item.id) ? (
-                                                        <>
-                                                            <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
-                                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                                                            </svg>
-                                                            Sending...
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                            </svg>
-                                                            Send Email
-                                                        </>
-                                                    )}
-                                                </button>
-                                            </td>
+
                                         </tr>
                                     ))}
                                     {getDataToDisplay().length === 0 && (
                                         <tr>
-                                            <td colSpan={7} className="px-6 py-12 text-center text-gray-400 italic">
+                                            <td colSpan={6} className="px-6 py-12 text-center text-gray-400 italic">
                                                 No {activeTab} found.
                                             </td>
                                         </tr>

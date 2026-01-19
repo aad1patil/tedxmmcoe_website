@@ -1,7 +1,7 @@
 import express from 'express';
 import Registration from '../models/Registration';
 import { protect, admin } from '../middleware/authMiddleware';
-import { sendConfirmationEmail } from '../utils/email';
+
 
 const router = express.Router();
 
@@ -38,20 +38,7 @@ router.patch('/registrations/:id/status', protect, admin, async (req, res) => {
             return res.status(404).json({ message: 'Registration not found' });
         }
 
-        // Automate Email Sending
-        if (status === 'confirmed') {
-            try {
-                await sendConfirmationEmail({
-                    to: registration.email,
-                    name: registration.name,
-                    ticketCategory: registration.ticketCategory,
-                });
-                console.log(`Auto-sent confirmation email to ${registration.email}`);
-            } catch (emailError) {
-                console.error('Failed to auto-send email:', emailError);
-                // Don't fail the request, just log it. The user can retry manually.
-            }
-        }
+
 
         res.json(registration);
     } catch (error: any) {
@@ -59,29 +46,7 @@ router.patch('/registrations/:id/status', protect, admin, async (req, res) => {
     }
 });
 
-// @route   POST /api/admin/send-email/:id
-// @desc    Send confirmation email to a registrant
-// @access  Private/Admin
-router.post('/send-email/:id', protect, admin, async (req, res) => {
-    try {
-        const registration = await Registration.findById(req.params.id);
 
-        if (!registration) {
-            return res.status(404).json({ message: 'Registration not found' });
-        }
-
-        await sendConfirmationEmail({
-            to: registration.email,
-            name: registration.name,
-            ticketCategory: registration.ticketCategory,
-        });
-
-        res.json({ message: 'Confirmation email sent successfully', email: registration.email });
-    } catch (error: any) {
-        console.error('Email sending error:', error);
-        res.status(500).json({ message: 'Failed to send email: ' + error.message });
-    }
-});
 
 export default router;
 
