@@ -17,13 +17,12 @@ Post the pandemic, he moved fully into content creation and is now best known fo
     {
         id: 2,
         name: "Hrushikesh Joshi",
-        bio: "Singer & Visionary",
+        bio: "Singer-Songwriter-Actor",
         image: "/speaker-hrushikesh.jpg",
         talkTitle: "Mirage",
         talkDescription: `The age of technology tests creativity and identity with the rise of synthetic “art”. Today’s world is one where art is both painted and programmed—a realm where so-called “masterpieces” can be conjured up by algorithms in seconds. But is the beauty real, or is it just a shimmer on the horizon? This talk dives deep into the alluring spell of AI-generated media, pressing us to ask: What still belongs purely to human hands and hearts? 
 In the age of the ultimate creative illusion, will we dare to chase what’s real beyond the mirage, or settle for reflections in the silicon sand?`,
-        speakerDescription: `From Rank to Riffs - a relentless pursuit.
-MMCOE and IIM Bangalore alumnus, National level Lawn-Tennis player, Over nine years of sea service - bearing the Indian Navy’s coveted “Command at Sea” Manager in a software product company, and now a published singer-songwriter-actor`
+        speakerDescription: `Lt Cdr Hrushikesh Joshi (R), is a singer-songwriter-actor, and MMCOE (2012, Electronics & Telecommunications) alumnus from Pune. After a decade in the Indian Navy's Executive Branch as an Officer, also holding the coveted 'Command at Sea', he chose an early retirement to follow his passion for art. He has since released multiple original songs on Spotify, YouTube, and Apple Music; and his next album is soon to be released. He has also written the title track for the film "ITS TOO MUCH" sung by Mr Adnan Sami, featured a ghazal with Zee Music, and written & produced a tribute song for the Indian Navy Official YouTube channel. A professional lawn tennis player, he balances his creative work with his role as corporate strategist, and actively supports causes like environmental protection and ending animal cruelty.`
     },
     {
         id: 3,
@@ -31,8 +30,8 @@ MMCOE and IIM Bangalore alumnus, National level Lawn-Tennis player, Over nine ye
         bio: "Professional Football Freestyler",
         image: "/speaker-chaitanya.jpg",
         talkTitle: "Aaina-i-khidmat",
-        talkDescription: `When systems evolve, society does not always follow. Working for society can often mean standing against it—unseen, unsupported, and resisted. Yet progress is shaped by those who continue to serve with empathy despite opposition, rising through persistence rather than approval. Machines may solve problems, but hope and equity are built by people who reflect society’s flaws back to itself. True change begins when service endures, even without acceptance.`,
-        speakerDescription: `Chaitanya is a professional football freestyler and panna athlete who expresses himself through football tricks. He represents India at global events and World Championships, performing on international stages. Now a full-time content creator known as Saadha Manus, he focuses on inspiring the upcoming generation while entertaining audiences around the world.`
+        talkDescription: `When systems evolve, society does not always follow.Working for society can often mean standing against it—unseen, unsupported, and resisted.Yet progress is shaped by those who continue to serve with empathy despite opposition, rising through persistence rather than approval.Machines may solve problems, but hope and equity are built by people who reflect society’s flaws back to itself.True change begins when service endures, even without acceptance.`,
+        speakerDescription: `Chaitanya is a professional football freestyler and panna athlete who expresses himself through football tricks.He represents India at global events and World Championships, performing on international stages.Now a full - time content creator known as Saadha Manus, he focuses on inspiring the upcoming generation while entertaining audiences around the world.`
     },
     {
         id: 4,
@@ -40,9 +39,9 @@ MMCOE and IIM Bangalore alumnus, National level Lawn-Tennis player, Over nine ye
         bio: "Artist",
         image: "/speaker-devanshi.jpg",
         talkTitle: "Kintsugi",
-        talkDescription: `After all the disruption, reinvention, and reflection—what remains is the human ability to find beauty in the cracks. “Kintsugi” is the survivor’s story—where every crack, failure, and setback becomes a line of gold, not a flaw. In a landscape transformed by disruption and reinvention, this talk celebrates how humans mend, restart, and remake themselves—embracing imperfection as a badge of honor. The world may fracture, systems may evolve, but resilience glimmers through the cracks. In the mosaic of change, it’s the courage to begin again—and the wisdom to cherish scars—that ultimately makes life a masterpiece.`,
-        speakerDescription: `Devanshi Saraogi is an artist and creative entrepreneur, and the founder of D RefleQtion, a branding studio based in India. She began her journey at 17 by creating an art page on Instagram, where she sold hand-painted artworks. She later dropped out of college and, without formal design education, financial safety nets, or access to a laptop, taught herself branding and design. Her first logo was created using only her phone. Over time, she transformed this art page into what would eventually become her branding studio.
-Originally from Assam, Devanshi moved to Mumbai to build her business independently. Over the years, she has grown her studio from small freelance projects to leading large-scale branding engagements, progressing from charging ₹500 for her early work to closing six- and seven-figure projects.`
+        talkDescription: `After all the disruption, reinvention, and reflection—what remains is the human ability to find beauty in the cracks. “Kintsugi” is the survivor’s story—where every crack, failure, and setback becomes a line of gold, not a flaw.In a landscape transformed by disruption and reinvention, this talk celebrates how humans mend, restart, and remake themselves—embracing imperfection as a badge of honor.The world may fracture, systems may evolve, but resilience glimmers through the cracks.In the mosaic of change, it’s the courage to begin again—and the wisdom to cherish scars—that ultimately makes life a masterpiece.`,
+        speakerDescription: `Devanshi Saraogi is an artist and creative entrepreneur, and the founder of D RefleQtion, a branding studio based in India.She began her journey at 17 by creating an art page on Instagram, where she sold hand - painted artworks.She later dropped out of college and, without formal design education, financial safety nets, or access to a laptop, taught herself branding and design.Her first logo was created using only her phone.Over time, she transformed this art page into what would eventually become her branding studio.
+Originally from Assam, Devanshi moved to Mumbai to build her business independently.Over the years, she has grown her studio from small freelance projects to leading large - scale branding engagements, progressing from charging ₹500 for her early work to closing six - and seven - figure projects.`
     },
     {
         id: 5,
@@ -50,10 +49,10 @@ Originally from Assam, Devanshi moved to Mumbai to build her business independen
         bio: "Lawyer, CA",
         image: "/speaker-priyanshi.jpg",
         talkTitle: "Etched in Silver",
-        talkDescription: `As our world turns digital, even money begins to lose its form—trading the clink of coins for the click of codes. Imagine a world where every rupee is a ripple in data, every transaction a trace in the banking ether. Would the disappearance of cash erase corruption, wash away black money, make stealing obsolete? Or will new loopholes—and new anxieties—emerge beneath the sheen of a cashless society? This talk lifts the silver veil on a future where every move is monitored, every choice is tallied, and trust must evolve alongside technology. As we weigh convenience against control, we must ask: When currency becomes pure information, what’s really gained—and what’s lost?`,
-        speakerDescription: `Priyanshi is a Chartered Accountant, tax lawyer, and corporate trainer based in Mumbai and New York. She co-founded Beyond the Degree, an education consultancy that works with universities and student communities across India to help young people build careers that balance professional degrees with unconventional interests.
-A national-level gold-medallist swimmer and professional Odissi dancer, she has also worked as a Radio Mirchi jockey and celebrity talk show host, interviewing 30+ Bollywood artists, sports personalities, and entrepreneurs. In 2016, she represented India at a Global Leadership Conference hosted by the White House, received a letter of appreciation from Michelle Obama, and served as the flag bearer for NYU School of Law convocation.
-Today, Priyanshi mentors students and young professionals, encouraging them to embrace multi-passionate, layered identities beyond a single “safe” label.`
+        talkDescription: `As our world turns digital, even money begins to lose its form—trading the clink of coins for the click of codes.Imagine a world where every rupee is a ripple in data, every transaction a trace in the banking ether.Would the disappearance of cash erase corruption, wash away black money, make stealing obsolete ? Or will new loopholes—and new anxieties—emerge beneath the sheen of a cashless society ? This talk lifts the silver veil on a future where every move is monitored, every choice is tallied, and trust must evolve alongside technology.As we weigh convenience against control, we must ask: When currency becomes pure information, what’s really gained—and what’s lost ? `,
+        speakerDescription: `Priyanshi is a Chartered Accountant, tax lawyer, and corporate trainer based in Mumbai and New York.She co - founded Beyond the Degree, an education consultancy that works with universities and student communities across India to help young people build careers that balance professional degrees with unconventional interests.
+A national - level gold - medallist swimmer and professional Odissi dancer, she has also worked as a Radio Mirchi jockey and celebrity talk show host, interviewing 30 + Bollywood artists, sports personalities, and entrepreneurs.In 2016, she represented India at a Global Leadership Conference hosted by the White House, received a letter of appreciation from Michelle Obama, and served as the flag bearer for NYU School of Law convocation.
+    Today, Priyanshi mentors students and young professionals, encouraging them to embrace multi - passionate, layered identities beyond a single “safe” label.`
     },
     {
         id: 6,
@@ -61,9 +60,9 @@ Today, Priyanshi mentors students and young professionals, encouraging them to e
         bio: "Mental Health Professional",
         image: "/speaker-riddhi.jpg",
         talkTitle: "Shāyad",
-        talkDescription: `As the line between real and artificial blurs, self doubt seeps into every creator and “शायद” takes center stage—the soft, uncertain throb of almost making it in a world obsessed with perfection. Here, ambition isn’t a finish line, but an endless corridor echoing with the footsteps of students weighed down by borrowed dreams and relentless cutoffs, all with a single question haunting them: What if my best is just not enough? Can I pull through this last “almost there”?
-This isn’t just a symptom to cure, but a sensation we all share—a global pulse of anxiety palpitating through admit cards, scoreboards, and silent, sleepless nights. On the stage, we crack open that ache—pulling beauty from the chase, and meaning from the uncertainty. After all, as we blur the lines between real and artificial, it’s the honest ache of “almost”—not the illusion of perfection—that makes us truly human.`,
-        speakerDescription: `Riddhi Shah is a mental health practitioner, graphologist, and social innovator dedicated to fostering human connection through empathy and art. Holding a Master’s degree from Christ University, her career spans de-addiction centers, schools, and corporate leadership at firms like Bosch; she currently serves as the lead Psychologist at Elevate Now alongside her private practice. As the co-founder of ‘Dear You’, she leads a postcard initiative that blends psychology and creativity to ensure individuals feel truly seen and heard. Driven by an insatiable curiosity to decode the "why" of human behavior, Riddhi advocates for emotional intelligence as a foundation for a more connected society.`
+        talkDescription: `As the line between real and artificial blurs, self doubt seeps into every creator and “शायद” takes center stage—the soft, uncertain throb of almost making it in a world obsessed with perfection.Here, ambition isn’t a finish line, but an endless corridor echoing with the footsteps of students weighed down by borrowed dreams and relentless cutoffs, all with a single question haunting them: What if my best is just not enough ? Can I pull through this last “almost there”?
+This isn’t just a symptom to cure, but a sensation we all share—a global pulse of anxiety palpitating through admit cards, scoreboards, and silent, sleepless nights.On the stage, we crack open that ache—pulling beauty from the chase, and meaning from the uncertainty.After all, as we blur the lines between real and artificial, it’s the honest ache of “almost”—not the illusion of perfection—that makes us truly human.`,
+        speakerDescription: `Riddhi Shah is a mental health practitioner, graphologist, and social innovator dedicated to fostering human connection through empathy and art.Holding a Master’s degree from Christ University, her career spans de - addiction centers, schools, and corporate leadership at firms like Bosch; she currently serves as the lead Psychologist at Elevate Now alongside her private practice.As the co - founder of ‘Dear You’, she leads a postcard initiative that blends psychology and creativity to ensure individuals feel truly seen and heard.Driven by an insatiable curiosity to decode the "why" of human behavior, Riddhi advocates for emotional intelligence as a foundation for a more connected society.`
     }
 ];
 
@@ -114,7 +113,7 @@ const Speakers = () => {
                 >
                     {marqueeSpeakers.map((speaker, index) => (
                         <div
-                            key={`${speaker.id}-${index}`}
+                            key={`${speaker.id} -${index} `}
                             onClick={() => setSelectedSpeaker(speaker)}
                             className="flex-shrink-0 w-72 md:w-80 group relative overflow-hidden rounded-xl bg-gray-900 cursor-pointer transform transition-transform hover:scale-105"
                         >
@@ -148,7 +147,7 @@ const Speakers = () => {
                             className="absolute inset-0 bg-black/90 backdrop-blur-sm"
                         />
                         <motion.div
-                            layoutId={`speaker-${selectedSpeaker.id}`}
+                            layoutId={`speaker - ${selectedSpeaker.id} `}
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
