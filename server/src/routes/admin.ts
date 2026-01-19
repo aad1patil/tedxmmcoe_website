@@ -38,6 +38,21 @@ router.patch('/registrations/:id/status', protect, admin, async (req, res) => {
             return res.status(404).json({ message: 'Registration not found' });
         }
 
+        // Automate Email Sending
+        if (status === 'confirmed') {
+            try {
+                await sendConfirmationEmail({
+                    to: registration.email,
+                    name: registration.name,
+                    ticketCategory: registration.ticketCategory,
+                });
+                console.log(`Auto-sent confirmation email to ${registration.email}`);
+            } catch (emailError) {
+                console.error('Failed to auto-send email:', emailError);
+                // Don't fail the request, just log it. The user can retry manually.
+            }
+        }
+
         res.json(registration);
     } catch (error: any) {
         res.status(500).json({ message: error.message });
