@@ -7,7 +7,7 @@ services:
       - "80:5001"
     environment:
       - PORT=5001
-      - MONGO_URI=mongodb+srv://aadip2501_db_user:2620MMCOExTED@cluster0.b7nq6nx.mongodb.net/tedxmmcoe?retryWrites=true&w=majority&appName=Cluster0
+      - MONGO_URI=mongodb+srv://aadip2501_db_user:%3C2620MMCOExTED%3E@cluster0.b7nq6nx.mongodb.net/tedxmmcoe?retryWrites=true&w=majority&appName=Cluster0
       - JWT_SECRET=change_this_secret_in_production
       - NODE_ENV=production
       - EMAIL_USER=${EMAIL_USER}
