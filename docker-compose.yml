@@ -11,7 +11,9 @@ services:
       - JWT_SECRET=change_this_secret_in_production
       - NODE_ENV=production
       - EMAIL_USER=${EMAIL_USER}
-      - EMAIL_PASS=${EMAIL_PASS}
+      - GMAIL_CLIENT_ID=${GMAIL_CLIENT_ID}
+      - GMAIL_CLIENT_SECRET=${GMAIL_CLIENT_SECRET}
+      - GMAIL_REFRESH_TOKEN=${GMAIL_REFRESH_TOKEN}
     volumes:
       - ./uploads:/app/uploads
     restart: always

@@ -1,13 +1,18 @@
-import nodemailer from 'nodemailer';
+import { google } from 'googleapis';
 
-// Create reusable transporter using Gmail
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
+const CLIENT_ID = process.env.GMAIL_CLIENT_ID;
+const CLIENT_SECRET = process.env.GMAIL_CLIENT_SECRET;
+const REFRESH_TOKEN = process.env.GMAIL_REFRESH_TOKEN;
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const SENDER_EMAIL = 'tedxmmcoe@mmcoe.edu.in';
+
+const oAuth2Client = new google.auth.OAuth2(
+    CLIENT_ID,
+    CLIENT_SECRET,
+    REDIRECT_URI
+);
+
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 interface EmailOptions {
     to: string;
@@ -16,11 +21,11 @@ interface EmailOptions {
 }
 
 export const sendConfirmationEmail = async ({ to, name, ticketCategory }: EmailOptions): Promise<void> => {
-    const mailOptions = {
-        from: `"TEDx MMCOE" <${process.env.EMAIL_USER}>`,
-        to,
-        subject: '🎉 Your TEDx MMCOE Registration is Confirmed!',
-        html: `
+    try {
+        const gmail = google.gmail({ version: 'v1', auth: oAuth2Client });
+
+        const subject = '🎉 Your TEDx MMCOE Registration is Confirmed!';
+        const htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -78,8 +83,37 @@ export const sendConfirmationEmail = async ({ to, name, ticketCategory }: EmailO
     </div>
 </body>
 </html>
-        `,
-    };
+        `;
 
-    await transporter.sendMail(mailOptions);
+        const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString('base64')}?=`;
+        const messageParts = [
+            `From: "TEDx MMCOE" <${SENDER_EMAIL}>`,
+            `To: ${to}`,
+            `Content-Type: text/html; charset=utf-8`,
+            `Mime-Version: 1.0`,
+            `Subject: ${utf8Subject}`,
+            '',
+            htmlContent,
+        ];
+        const message = messageParts.join('\n');
+
+        // The body needs to be base64url encoded.
+        const encodedMessage = Buffer.from(message)
+            .toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+
+        await gmail.users.messages.send({
+            userId: 'me',
+            requestBody: {
+                raw: encodedMessage,
+            },
+        });
+
+        console.log(`Email successfully sent to ${to} via Gmail API`);
+    } catch (error: any) {
+        console.error('Gmail API Send Error:', error.response?.data || error.message);
+        throw error;
+    }
 };
