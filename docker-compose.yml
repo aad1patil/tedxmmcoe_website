@@ -10,6 +10,8 @@ services:
       - MONGO_URI=mongodb://mongo:27017/tedxmmcoe
       - JWT_SECRET=change_this_secret_in_production
       - NODE_ENV=production
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
     depends_on:
       - mongo
     volumes:

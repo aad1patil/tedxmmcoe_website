@@ -8,7 +8,7 @@ const speakers = [
         name: "Amey Kadam",
         bio: "Artist & Storyteller",
         image: "/speaker-amey.jpg",
-        talkTitle: "Passion v Profession",
+        talkTitle: "Dil vs Duniya",
         talkDescription: `As ambition increasingly takes new forms, we’re left asking an important question: should we follow the safety of conventional careers, or choose paths driven by passion and purpose? In today’s evolving world, success is no longer limited to engineering, medicine, or law—careers in creative, digital, and public-facing domains are reshaping how we define achievement. This talk explores the reality of pivoting away from stability to pursue what truly matters, examining both the freedom and the pressures that come with unconventional choices. Passion or Profession? invites us to look beyond societal expectations and reflect on what it truly means to build a fulfilling career.`,
         speakerDescription: `Ameya is a storyteller and content creator. He began as a child actor in the famous Marathi television serial De Dhamal. He later studied Applied Art and photography, graduating as a gold medallist and a CAG award winner.
 While still in college, driven by curiosity to understand how reality television works, he applied for MTV Roadies and went on to become the first Marathi contestant to reach the Top 5 in Roadies Season 7. After graduating, he worked at the advertising agency Mudra, before returning to his art college as a professor, where he taught advertising campaigns for nearly nine years.
@@ -30,9 +30,9 @@ MMCOE and IIM Bangalore alumnus, National level Lawn-Tennis player, Over nine ye
         name: "Chaitanya Deshpande",
         bio: "Professional Football Freestyler",
         image: "/speaker-chaitanya.jpg",
-        talkTitle: "Aaini-i-khidmat",
+        talkTitle: "Aaina-i-khidmat",
         talkDescription: `When systems evolve, society does not always follow. Working for society can often mean standing against it—unseen, unsupported, and resisted. Yet progress is shaped by those who continue to serve with empathy despite opposition, rising through persistence rather than approval. Machines may solve problems, but hope and equity are built by people who reflect society’s flaws back to itself. True change begins when service endures, even without acceptance.`,
-        speakerDescription: `Chaitanya is a professional football freestyler and panna athlete who expresses himself through football tricks. He represents India at global events and World Championships, performing on international stages. Now a full-time content creator known as **“Saadha Manus,”** he focuses on inspiring the upcoming generation while entertaining audiences around the world.`
+        speakerDescription: `Chaitanya is a professional football freestyler and panna athlete who expresses himself through football tricks. He represents India at global events and World Championships, performing on international stages. Now a full-time content creator known as Saadha Manus, he focuses on inspiring the upcoming generation while entertaining audiences around the world.`
     },
     {
         id: 4,
@@ -41,17 +41,8 @@ MMCOE and IIM Bangalore alumnus, National level Lawn-Tennis player, Over nine ye
         image: "/speaker-devanshi.jpg",
         talkTitle: "Kintsugi",
         talkDescription: `After all the disruption, reinvention, and reflection—what remains is the human ability to find beauty in the cracks. “Kintsugi” is the survivor’s story—where every crack, failure, and setback becomes a line of gold, not a flaw. In a landscape transformed by disruption and reinvention, this talk celebrates how humans mend, restart, and remake themselves—embracing imperfection as a badge of honor. The world may fracture, systems may evolve, but resilience glimmers through the cracks. In the mosaic of change, it’s the courage to begin again—and the wisdom to cherish scars—that ultimately makes life a masterpiece.`,
-        speakerDescription: `Devanshi Saraogi is an artist and creative entrepreneur, and the founder of D RefleQtion, a
-branding studio based in India.
-She began her journey at 17 by creating an art page on Instagram, where she sold
-hand-painted artworks. She later dropped out of college and, without formal design education,
-financial safety nets, or access to a laptop, taught herself branding and design. Her first logo
-was created using only her phone. Over time, she transformed this art page into what would
-eventually become her branding studio.
-Originally from Assam, Devanshi moved to Mumbai to build her business independently. Over
-the years, she has grown her studio from small freelance projects to leading large-scale
-branding engagements, progressing from charging ₹500 for her early work to closing six- and
-seven-figure projects.`
+        speakerDescription: `Devanshi Saraogi is an artist and creative entrepreneur, and the founder of D RefleQtion, a branding studio based in India. She began her journey at 17 by creating an art page on Instagram, where she sold hand-painted artworks. She later dropped out of college and, without formal design education, financial safety nets, or access to a laptop, taught herself branding and design. Her first logo was created using only her phone. Over time, she transformed this art page into what would eventually become her branding studio.
+Originally from Assam, Devanshi moved to Mumbai to build her business independently. Over the years, she has grown her studio from small freelance projects to leading large-scale branding engagements, progressing from charging ₹500 for her early work to closing six- and seven-figure projects.`
     },
     {
         id: 5,
@@ -69,7 +60,7 @@ Today, Priyanshi mentors students and young professionals, encouraging them to e
         name: "Riddhi Shah",
         bio: "Mental Health Professional",
         image: "/speaker-riddhi.jpg",
-        talkTitle: "Shayad",
+        talkTitle: "Shāyad",
         talkDescription: `As the line between real and artificial blurs, self doubt seeps into every creator and “शायद” takes center stage—the soft, uncertain throb of almost making it in a world obsessed with perfection. Here, ambition isn’t a finish line, but an endless corridor echoing with the footsteps of students weighed down by borrowed dreams and relentless cutoffs, all with a single question haunting them: What if my best is just not enough? Can I pull through this last “almost there”?
 This isn’t just a symptom to cure, but a sensation we all share—a global pulse of anxiety palpitating through admit cards, scoreboards, and silent, sleepless nights. On the stage, we crack open that ache—pulling beauty from the chase, and meaning from the uncertainty. After all, as we blur the lines between real and artificial, it’s the honest ache of “almost”—not the illusion of perfection—that makes us truly human.`,
         speakerDescription: `Riddhi Shah is a mental health practitioner, graphologist, and social innovator dedicated to fostering human connection through empathy and art. Holding a Master’s degree from Christ University, her career spans de-addiction centers, schools, and corporate leadership at firms like Bosch; she currently serves as the lead Psychologist at Elevate Now alongside her private practice. As the co-founder of ‘Dear You’, she leads a postcard initiative that blends psychology and creativity to ensure individuals feel truly seen and heard. Driven by an insatiable curiosity to decode the "why" of human behavior, Riddhi advocates for emotional intelligence as a foundation for a more connected society.`

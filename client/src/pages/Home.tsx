@@ -23,7 +23,7 @@ const Home = () => {
                         transition={{ duration: 0.8 }}
                     >
                         <h2 className="text-xl md:text-3xl font-medium mb-4 text-ted-red tracking-widest uppercase">
-                            Ideas Worth Spreading
+                            Ideas Change Everything
                         </h2>
                         <h1 className="text-5xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 mb-6">
                             TEDxMMCOE
@@ -80,7 +80,7 @@ const Home = () => {
                                 What is <span className="text-ted-red">TEDx</span>?
                             </h2>
                             <p className="text-gray-400 mb-6 leading-relaxed">
-                                In the spirit of ideas worth spreading, TED has created a program called TEDx. TEDx is a program of local, self-organized events that bring people together to share a TED-like experience.
+                                In the spirit of ideas that change everything, TED has created a program called TEDx. TEDx is a program of local, self-organized events that bring people together to share a TED-like experience.
                             </p>
                             <p className="text-gray-400 leading-relaxed">
                                 At a TEDx event, TED Talks video and live speakers combine to spark deep discussion and connection in a small group. These local, self-organized events are branded TEDx, where x = independently organized TED event.

@@ -1,23 +1,23 @@
 import { motion } from 'framer-motion';
 
 const schedule = [
-    { time: "9:00 am", title: "Registrations Start & Arrival" },
-    { time: "9:30 am", title: "Attendees Seated" },
+    { time: "9:00 am", title: "Registrations & Arrival of Guests" },
+    { time: "9:30 am", title: "Seating of Attendees" },
     { time: "9:45 am", title: "Arrival of Dignitaries" },
     { time: "10:00 am", title: "Event Inauguration" },
     { time: "10:20 am", title: "Stage Setup" },
-    { time: "10:30 am", title: "Introduction" },
+    { time: "10:30 am", title: "Inaugural Segment" },
     { time: "10:45 am", title: "Performance", speaker: "Kashmira Khot" },
     { time: "11:00 am", title: "Mirage", speaker: "Hrushikesh Joshi" },
-    { time: "11:25 am", title: "Etched in Silver", speaker: "Priyanshi Choksi" },
-    { time: "11:50 am", title: "Passion v Profession", speaker: "Ameya Kadam" },
-    { time: "12:15 pm", title: "Lunch" },
-    { time: "1:30 pm", title: "Performance #1" },
-    { time: "1:45 pm", title: "Shayad", speaker: "Riddhi Shah" },
-    { time: "2:10 pm", title: "Aaini-i-khidmat", speaker: "Chaitanya Deshpande" },
-    { time: "2:35 pm", title: "Kintsugi", speaker: "Devanshi Saraogi" },
-    { time: "3:05 pm", title: "Vote of Thanks" },
-    { time: "3:15 pm", title: "Conclusion of Program" }
+    { time: "11:30 am", title: "Etched in Silver", speaker: "Priyanshi Choksi" },
+    { time: "12:00 pm", title: "Dil vs Duniya", speaker: "Ameya Kadam" },
+    { time: "12:30 pm", title: "Lunch Break" },
+    { time: "1:30 pm", title: "Performance #2" },
+    { time: "2:00 pm", title: "Shāyad", speaker: "Riddhi Shah" },
+    { time: "2:30 pm", title: "Aaina-i-khidmat", speaker: "Chaitanya Deshpande" },
+    { time: "3:00 pm", title: "Kintsugi", speaker: "Devanshi Saraogi" },
+    { time: "3:30 pm", title: "Vote of Thanks" },
+    { time: "3:45 pm", title: "Conclusion of the Event" }
 ];
 
 const Timeline = () => {

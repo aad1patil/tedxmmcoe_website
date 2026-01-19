@@ -66,7 +66,7 @@ const Dashboard = () => {
                     </h1>
                     <p className="text-xl text-gray-400 max-w-2xl">
                         We are thrilled to have you as part of the <span className="text-white font-semibold">TEDxMMCOE</span> community.
-                        Get ready to ignite your mind and explore ideas worth spreading.
+                        Get ready to ignite your mind and explore ideas that change everything.
                     </p>
                 </motion.div>
 

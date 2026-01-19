@@ -34,7 +34,7 @@ const EventDetails = () => {
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-gray-400">Event Ends</span>
-                                    <span className="font-medium">05:00 PM</span>
+                                    <span className="font-medium">04:00 PM</span>
                                 </div>
                             </div>
                         </div>

@@ -33,8 +33,11 @@ const Register = () => {
                         <h1 className="text-4xl md:text-6xl font-bold mb-6">
                             Secure Your <span className="text-ted-red">Spot</span>
                         </h1>
-                        <p className="text-gray-400 text-xl mb-12">
-                            Join 500+ attendees for an unforgettable experience at TEDxMMCOE.
+                        <p className="text-gray-400 text-xl mb-4">
+                            Join 100 attendees for an unforgettable experience at TEDxMMCOE.
+                        </p>
+                        <p className="text-yellow-500 text-sm mb-12 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
+                            ⚠️ <strong>Important:</strong> If you select the wrong pass type, you will be required to repay the entire amount.
                         </p>
 
                         {soldOut && (

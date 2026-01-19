@@ -34,7 +34,8 @@ export const protect = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const admin = (req: Request, res: Response, next: NextFunction) => {
-    if (req.user && req.user.role === 'admin') {
+    const ADMIN_EMAIL = 'tedxmmcoe@mmcoe.edu.in';
+    if (req.user && req.user.role === 'admin' && req.user.email === ADMIN_EMAIL) {
         next();
     } else {
         res.status(401).json({ message: 'Not authorized as an admin' });
