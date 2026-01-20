@@ -24,7 +24,7 @@ const registrationSchema = new mongoose.Schema({
     },
     idCardPath: {
         type: String,
-        required: true
+        required: false
     },
     status: {
         type: String,

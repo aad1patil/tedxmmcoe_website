@@ -45,8 +45,9 @@ const Payment = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!file || !transactionId || !idCardFile) {
-            alert("Please provide Transaction ID, Payment Screenshot, and ID Card.");
+        const isTicket = type !== 'merchandise';
+        if (!file || !transactionId || (isTicket && !idCardFile)) {
+            alert(`Please provide Transaction ID, Payment Screenshot${isTicket ? ', and ID Card' : ''}.`);
             return;
         }
 
@@ -63,7 +64,9 @@ const Payment = () => {
                 formData.append('institution', ticketCategory === 'individual' ? institution : 'N/A');
             }
             formData.append('screenshot', file);
-            formData.append('idCard', idCardFile);
+            if (idCardFile) {
+                formData.append('idCard', idCardFile);
+            }
 
             const apiUrl = import.meta.env.VITE_API_URL || '/api';
 
@@ -200,20 +203,21 @@ const Payment = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm text-gray-400 mb-2">College ID Card</label>
+                            <label className="block text-sm text-gray-400 mb-2">
+                                College ID Card {type === 'merchandise' && <span className="text-gray-600 font-normal italic">(Optional)</span>}
+                            </label>
                             <div className="border-2 border-dashed border-gray-700 rounded-xl p-8 text-center hover:border-ted-red transition-colors cursor-pointer relative">
                                 <input
                                     type="file"
                                     accept="image/*"
                                     onChange={handleIdCardChange}
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                    required
                                 />
                                 <Upload className="w-8 h-8 text-gray-500 mx-auto mb-2" />
                                 {idCardFile ? (
                                     <p className="text-ted-red font-medium">{idCardFile.name}</p>
                                 ) : (
-                                    <p className="text-gray-500 text-sm">Click to upload ID Card (JPG/PNG)</p>
+                                    <p className="text-gray-500 text-sm">Click to upload ID Card {type !== 'merchandise' && '(Required for Students)'}</p>
                                 )}
                             </div>
                         </div>
