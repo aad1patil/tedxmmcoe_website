@@ -18,26 +18,32 @@ async function fixPaths() {
 
         const registrations = await Registration.find({
             $or: [
-                { screenshotPath: { $regex: /^\// } }, // Starts with /
-                { idCardPath: { $regex: /^\// } }
+                { screenshotPath: { $regex: /uploads\// } },
+                { idCardPath: { $regex: /uploads\// } }
             ]
         });
 
-        console.log(`Found ${registrations.length} registrations with absolute paths.`);
+        console.log(`Found ${registrations.length} registrations to inspect.`);
 
         for (const reg of registrations) {
             let updated = false;
 
-            if (reg.screenshotPath && reg.screenshotPath.startsWith('/')) {
-                const filename = path.basename(reg.screenshotPath);
-                reg.screenshotPath = path.join(STATIC_PREFIX, filename);
-                updated = true;
+            if (reg.screenshotPath && reg.screenshotPath.includes('uploads/')) {
+                const parts = reg.screenshotPath.split('uploads/');
+                const normalized = 'uploads/' + parts[parts.length - 1];
+                if (reg.screenshotPath !== normalized) {
+                    reg.screenshotPath = normalized;
+                    updated = true;
+                }
             }
 
-            if (reg.idCardPath && reg.idCardPath.startsWith('/')) {
-                const filename = path.basename(reg.idCardPath);
-                reg.idCardPath = path.join(STATIC_PREFIX, filename);
-                updated = true;
+            if (reg.idCardPath && reg.idCardPath.includes('uploads/')) {
+                const parts = reg.idCardPath.split('uploads/');
+                const normalized = 'uploads/' + parts[parts.length - 1];
+                if (reg.idCardPath !== normalized) {
+                    reg.idCardPath = normalized;
+                    updated = true;
+                }
             }
 
             if (updated) {
