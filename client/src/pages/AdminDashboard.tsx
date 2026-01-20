@@ -199,14 +199,27 @@ const AdminDashboard = () => {
             );
         }
 
+        const getImageUrl = (urlPath: string) => {
+            if (!urlPath) return '';
+            // If the path already includes 'uploads/', make sure it starts with /uploads/
+            if (urlPath.includes('uploads/')) {
+                const parts = urlPath.split('uploads/');
+                return `/uploads/${parts[parts.length - 1]}`;
+            }
+            // Fallback: prepend / if not already present
+            return urlPath.startsWith('/') ? urlPath : `/${urlPath}`;
+        };
+
+        const finalUrl = getImageUrl(url);
+
         return (
             <button
-                onClick={() => setSelectedImage(url)}
+                onClick={() => setSelectedImage(finalUrl)}
                 className="inline-flex items-center gap-1 hover:opacity-80 transition-opacity mr-2 cursor-pointer border-0 bg-transparent p-0"
                 title={`Click to view ${label}`}
             >
                 <img
-                    src={url}
+                    src={finalUrl}
                     alt={label}
                     className="h-10 w-auto rounded border border-gray-200 object-cover"
                     onError={() => setImgError(true)}

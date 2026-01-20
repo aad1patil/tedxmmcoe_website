@@ -13,9 +13,10 @@ async function debug() {
             createdAt: Date
         }));
 
-        const regs = await Registration.find({}).sort({ createdAt: -1 }).limit(10);
-        console.log('Last 10 registrations:');
-        regs.forEach(r => {
+        const regs = await Registration.find({}).sort({ createdAt: -1 });
+        console.log(`Total registrations in DB: ${regs.length}`);
+        console.log('Latest 20 registrations:');
+        regs.slice(0, 20).forEach(r => {
             console.log(`- ${r.name}:`);
             console.log(`  Screenshot: "${(r as any).screenshotPath}"`);
             console.log(`  ID Card:    "${(r as any).idCardPath}"`);

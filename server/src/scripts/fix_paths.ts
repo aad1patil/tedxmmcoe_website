@@ -12,43 +12,44 @@ async function fixPaths() {
         console.log('Connected to MongoDB');
 
         const Registration = mongoose.model('Registration', new mongoose.Schema({
+            name: String,
             screenshotPath: String,
             idCardPath: String
         }));
 
-        const registrations = await Registration.find({
-            $or: [
-                { screenshotPath: { $regex: /uploads\// } },
-                { idCardPath: { $regex: /uploads\// } }
-            ]
-        });
-
-        console.log(`Found ${registrations.length} registrations to inspect.`);
+        const registrations = await Registration.find({});
+        console.log(`Scanning ${registrations.length} registrations...`);
 
         for (const reg of registrations) {
             let updated = false;
 
-            if (reg.screenshotPath && reg.screenshotPath.includes('uploads/')) {
-                const parts = reg.screenshotPath.split('uploads/');
-                const normalized = 'uploads/' + parts[parts.length - 1];
-                if (reg.screenshotPath !== normalized) {
-                    reg.screenshotPath = normalized;
-                    updated = true;
-                }
+            const normalize = (p: string | undefined) => {
+                if (!p) return p;
+                // If it's already an absolute path like /app/uploads/file.png or //app/...
+                // or a relative path like app/uploads/file.png
+                // we want only the filename prepended with 'uploads/'
+                const filename = path.basename(p);
+                return `uploads/${filename}`;
+            };
+
+            const oldScreenshot = reg.screenshotPath as string | undefined;
+            const newScreenshot = normalize(oldScreenshot);
+            if (newScreenshot && oldScreenshot !== newScreenshot) {
+                console.log(`Fixing screenshot for ${reg.name}: "${oldScreenshot}" -> "${newScreenshot}"`);
+                reg.screenshotPath = newScreenshot;
+                updated = true;
             }
 
-            if (reg.idCardPath && reg.idCardPath.includes('uploads/')) {
-                const parts = reg.idCardPath.split('uploads/');
-                const normalized = 'uploads/' + parts[parts.length - 1];
-                if (reg.idCardPath !== normalized) {
-                    reg.idCardPath = normalized;
-                    updated = true;
-                }
+            const oldId = reg.idCardPath as string | undefined;
+            const newId = normalize(oldId);
+            if (newId && oldId !== newId) {
+                console.log(`Fixing idCard for ${reg.name}: "${oldId}" -> "${newId}"`);
+                reg.idCardPath = newId;
+                updated = true;
             }
 
             if (updated) {
                 await reg.save();
-                console.log(`Fixed paths for registration ID: ${reg._id}`);
             }
         }
 
