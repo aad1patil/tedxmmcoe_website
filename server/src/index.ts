@@ -32,7 +32,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/registrations', registrationRoutes);
 
 // Make uploads folder static
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Serve Frontend (Client)
 import fs from 'fs';

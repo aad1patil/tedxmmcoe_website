@@ -11,7 +11,7 @@ const router = express.Router();
 // Configure Multer for local storage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadDir = 'uploads/';
+        const uploadDir = path.join(process.cwd(), 'uploads/');
         // Ensure directory exists
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
