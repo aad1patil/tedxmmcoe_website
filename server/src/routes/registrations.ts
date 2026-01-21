@@ -58,7 +58,7 @@ const uploadFields = upload.fields([
 // @access  Private
 router.post('/', protect, uploadFields, async (req: any, res) => {
     try {
-        const { transactionId, type, ticketCategory, institution, size, amount } = req.body;
+        const { transactionId, type, ticketCategory, institution, size, amount, passOption } = req.body;
 
         if (!req.files || !req.files.screenshot) {
             return res.status(400).json({ message: 'Payment Screenshot is required.' });
@@ -104,6 +104,7 @@ router.post('/', protect, uploadFields, async (req: any, res) => {
             ticketCategory,
             institution,
             size,
+            passOption,
             amount: Number(amount), // Ensure it's a number
         });
 

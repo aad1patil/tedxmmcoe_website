@@ -50,6 +50,10 @@ const registrationSchema = new mongoose.Schema({
     size: {
         type: String // For merchandise
     },
+    passOption: {
+        type: String, // 'Lunch + Goodies' or 'Lunch Only'
+        default: 'N/A'
+    },
     createdAt: {
         type: Date,
         default: Date.now

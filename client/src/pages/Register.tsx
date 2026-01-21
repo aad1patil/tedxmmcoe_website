@@ -47,21 +47,53 @@ const Register = () => {
                         )}
 
 
-                        <div className="grid md:grid-cols-3 gap-8 mb-12 text-left">
-                            {/* Student Pass (MMCOE) */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12 text-left">
+                            {/* Student Pass (MMCOE - Full) */}
                             <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between">
                                 <div>
-                                    <h3 className="text-xl font-bold mb-2">Student Pass</h3>
+                                    <h3 className="text-xl font-bold mb-2">Student Pass (Full)</h3>
                                     <div className="text-3xl font-bold mb-2">₹500</div>
-                                    <p className="text-gray-400 text-sm mb-6">(Only for MMCOE Students/Faculty)</p>
+                                    <p className="text-gray-400 text-sm mb-6">Food/Lunch + TEDxMMCOE Goodies</p>
                                 </div>
                                 {soldOut ? (
                                     <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
                                         Sold Out
                                     </button>
                                 ) : (
-                                    <Link to="/login" state={{ type: 'ticket', institution: 'MMCOE' }} className="block w-full text-center bg-ted-red text-white font-bold py-3 rounded-lg hover:bg-red-700 transition-colors">
-                                        Register (MMCOE)
+                                    <Link
+                                        to="/login"
+                                        state={{ type: 'ticket', institution: 'MMCOE', passOption: 'Lunch + Goodies' }}
+                                        onClick={() => {
+                                            localStorage.setItem('pendingReg', JSON.stringify({ institution: 'MMCOE', passOption: 'Lunch + Goodies' }));
+                                        }}
+                                        className="block w-full text-center bg-ted-red text-white font-bold py-2 rounded-lg hover:bg-red-700 transition-colors"
+                                    >
+                                        Register (Full)
+                                    </Link>
+                                )}
+                            </div>
+
+                            {/* Student Pass (MMCOE - Lunch Only) */}
+                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between border-dashed">
+                                <div>
+                                    <h3 className="text-xl font-bold mb-2">Student (Lunch)</h3>
+                                    <div className="text-3xl font-bold mb-2">₹300</div>
+                                    <p className="text-gray-400 text-sm mb-6">Only Food/Lunch will be provided</p>
+                                </div>
+                                {soldOut ? (
+                                    <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
+                                        Sold Out
+                                    </button>
+                                ) : (
+                                    <Link
+                                        to="/login"
+                                        state={{ type: 'ticket', institution: 'MMCOE', passOption: 'Lunch Only' }}
+                                        onClick={() => {
+                                            localStorage.setItem('pendingReg', JSON.stringify({ institution: 'MMCOE', passOption: 'Lunch Only' }));
+                                        }}
+                                        className="block w-full text-center bg-gray-800 text-white font-bold py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                                    >
+                                        Register (Lunch)
                                     </Link>
                                 )}
                             </div>
@@ -78,7 +110,14 @@ const Register = () => {
                                         Sold Out
                                     </button>
                                 ) : (
-                                    <Link to="/login" state={{ type: 'ticket', institution: 'Other' }} className="block w-full text-center bg-gray-800 text-white font-bold py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                                    <Link
+                                        to="/login"
+                                        state={{ type: 'ticket', institution: 'Other' }}
+                                        onClick={() => {
+                                            localStorage.setItem('pendingReg', JSON.stringify({ institution: 'Other' }));
+                                        }}
+                                        className="block w-full text-center bg-gray-800 text-white font-bold py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                                    >
                                         Register (Community)
                                     </Link>
                                 )}
@@ -89,14 +128,21 @@ const Register = () => {
                                 <div>
                                     <h3 className="text-xl font-bold mb-2">Team Pass</h3>
                                     <div className="text-3xl font-bold mb-2">₹300</div>
-                                    <p className="text-gray-400 text-sm mb-6">TEDxMMCOE team members registration</p>
+                                    <p className="text-gray-400 text-sm mb-6">TEDxMMCOE team members only</p>
                                 </div>
                                 {soldOut ? (
                                     <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
                                         Sold Out
                                     </button>
                                 ) : (
-                                    <Link to="/login" state={{ type: 'team' }} className="block w-full text-center bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-200 transition-colors">
+                                    <Link
+                                        to="/login"
+                                        state={{ type: 'team' }}
+                                        onClick={() => {
+                                            localStorage.removeItem('pendingReg'); // Clear for team
+                                        }}
+                                        className="block w-full text-center bg-white text-black font-bold py-2 rounded-lg hover:bg-gray-200 transition-colors"
+                                    >
                                         Register (Team)
                                     </Link>
                                 )}

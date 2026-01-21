@@ -18,7 +18,22 @@ const Payment = () => {
     const [idCardFile, setIdCardFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [institution, setInstitution] = useState('MMCOE');
+    const [passOption, setPassOption] = useState<'Lunch + Goodies' | 'Lunch Only'>('Lunch + Goodies');
     const [ticketCategory, setTicketCategory] = useState<'individual' | 'team'>((location.state?.type === 'team') ? 'team' : 'individual');
+
+    // Handle initial state from location or localStorage
+    useState(() => {
+        const saved = localStorage.getItem('pendingReg');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                if (parsed.institution) setInstitution(parsed.institution);
+                if (parsed.passOption) setPassOption(parsed.passOption);
+            } catch (e) {
+                console.error("Failed to parse pendingReg", e);
+            }
+        }
+    });
 
     // Calculate amount based on type/category/institution
     let amount = 0;
@@ -28,7 +43,11 @@ const Payment = () => {
         amount = 300;
     } else {
         // Individual Ticket
-        amount = institution === 'MMCOE' ? 500 : 800;
+        if (institution === 'MMCOE') {
+            amount = passOption === 'Lunch + Goodies' ? 500 : 300;
+        } else {
+            amount = 800;
+        }
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +81,9 @@ const Payment = () => {
             } else {
                 formData.append('ticketCategory', ticketCategory);
                 formData.append('institution', ticketCategory === 'individual' ? institution : 'N/A');
+                if (institution === 'MMCOE' && ticketCategory === 'individual') {
+                    formData.append('passOption', passOption);
+                }
             }
             formData.append('screenshot', file);
             if (idCardFile) {
@@ -77,6 +99,7 @@ const Payment = () => {
                 }
             });
 
+            localStorage.removeItem('pendingReg');
             console.log("Payment Saved to DB");
             // Redirect to Dashboard with success message
             navigate('/dashboard', {
@@ -148,6 +171,20 @@ const Payment = () => {
                                     <p className="text-xs text-gray-500 mt-2">
                                         * MMCOE ID will be verified at the venue.
                                     </p>
+
+                                    {institution === 'MMCOE' && (
+                                        <div className="mt-4">
+                                            <label className="block text-sm text-gray-400 mb-2">Select Pass Option</label>
+                                            <select
+                                                value={passOption}
+                                                onChange={(e) => setPassOption(e.target.value as any)}
+                                                className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 focus:border-ted-red focus:outline-none transition-colors"
+                                            >
+                                                <option value="Lunch + Goodies">₹500 (Lunch + Goodies)</option>
+                                                <option value="Lunch Only">₹300 (Lunch Only)</option>
+                                            </select>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 

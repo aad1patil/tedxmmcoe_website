@@ -15,6 +15,7 @@ interface Registration {
     idCardPath?: string;     // Path to ID card image
     status: string;
     amount: number;
+    passOption?: string;
     createdAt?: any;
     timestamp?: any;
 }
@@ -306,7 +307,8 @@ const AdminDashboard = () => {
                                                 'Upload Date': dateObj ? dateObj.toLocaleDateString('en-IN') : 'N/A',
                                                 'Upload Time': dateObj ? dateObj.toLocaleTimeString('en-IN') : 'N/A',
                                                 'Proof URL': item.screenshotPath ? `/${item.screenshotPath}` : 'N/A',
-                                                'ID Card URL': item.idCardPath ? `/${item.idCardPath}` : 'N/A'
+                                                'ID Card URL': item.idCardPath ? `/${item.idCardPath}` : 'N/A',
+                                                'Pass Option': (item as Registration).passOption || 'N/A'
                                             };
 
                                             if (activeTab === 'registrations') {
@@ -435,7 +437,10 @@ const AdminDashboard = () => {
                                             </td>
                                             {activeTab === 'registrations' ? (
                                                 <td className="px-6 py-4">
-                                                    {(item as Registration).institution}
+                                                    <div>{(item as Registration).institution}</div>
+                                                    {((item as Registration).institution === 'MMCOE') && (
+                                                        <div className="text-xs text-ted-red font-bold mt-1">{(item as Registration).passOption}</div>
+                                                    )}
                                                 </td>
                                             ) : activeTab === 'team' ? (
                                                 <td className="px-6 py-4 font-bold text-gray-500">
