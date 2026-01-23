@@ -10,7 +10,7 @@ const Home = () => {
                 <img
                     src="/mmcoe-header.png"
                     alt="Marathwada Mitramandal's College of Engineering"
-                    className="h-16 md:h-20 object-contain drop-shadow-lg"
+                    className="h-32 md:h-40 object-contain drop-shadow-lg"
                     style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}
                 />
             </div>
