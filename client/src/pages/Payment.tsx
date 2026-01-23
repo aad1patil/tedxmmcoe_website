@@ -169,6 +169,12 @@ const Payment = () => {
                                     <p className="text-sm text-ted-red mt-4 font-bold">
                                         Amount: ₹800
                                     </p>
+
+                                    <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4 mt-6">
+                                        <p className="text-red-500 text-xs font-bold leading-relaxed">
+                                            ⚠️ Due to a overwhelming response and limited seats left, we have updated our prices to 800 rupees for everyone(MMCOE students too), no payment less than 800 will be accepted and such registrations will not be considered valid.
+                                        </p>
+                                    </div>
                                 </div>
                             )}
 
@@ -192,12 +198,6 @@ const Payment = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4 mb-6">
-                            <p className="text-red-500 text-sm font-bold leading-relaxed">
-                                ⚠️ Due to a overwhelming response and limited seats left, we have updated our prices to 800 rupees for everyone(MMCOE students too), no payment less than 800 will be accepted and such registrations will not be considered valid.
-                            </p>
-                        </div>
-
                         <div>
                             <label className="block text-sm text-gray-400 mb-2">Transaction ID (UTR)</label>
                             <input
