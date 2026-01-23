@@ -24,12 +24,14 @@ const Home = () => {
                         className="flex flex-col items-center"
                     >
                         {/* MMCOE Header Logo - Between Navbar and Headline */}
-                        <img
-                            src="/mmcoe-header.png"
-                            alt="Marathwada Mitramandal's College of Engineering"
-                            className="h-40 md:h-56 object-contain mb-8 drop-shadow-2xl brightness-0 invert"
-                            style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2)) brightness(0) invert(1)' }}
-                        />
+                        <div className="w-full max-w-lg md:max-w-3xl mb-8">
+                            <img
+                                src="/mmcoe-header.png"
+                                alt="Marathwada Mitramandal's College of Engineering"
+                                className="w-full h-auto object-contain drop-shadow-2xl"
+                                style={{ filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.3)) brightness(0) invert(1)' }}
+                            />
+                        </div>
 
                         <h2 className="text-xl md:text-3xl font-medium mb-4 text-ted-red tracking-widest uppercase">
                             Ideas Change Everything
