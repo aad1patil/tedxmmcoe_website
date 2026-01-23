@@ -18,7 +18,7 @@ const Payment = () => {
     const [idCardFile, setIdCardFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [institution, setInstitution] = useState('MMCOE');
-    const [passOption, setPassOption] = useState<'Lunch + Goodies' | 'Lunch Only'>('Lunch + Goodies');
+    // passOption removed as individual tickets are now fixed at ₹800
     const [ticketCategory, setTicketCategory] = useState<'individual' | 'team'>((location.state?.type === 'team') ? 'team' : 'individual');
 
     // Handle initial state from location or localStorage
@@ -28,7 +28,7 @@ const Payment = () => {
             try {
                 const parsed = JSON.parse(saved);
                 if (parsed.institution) setInstitution(parsed.institution);
-                if (parsed.passOption) setPassOption(parsed.passOption);
+                // passOption initialization removed
             } catch (e) {
                 console.error("Failed to parse pendingReg", e);
             }
@@ -42,12 +42,8 @@ const Payment = () => {
     } else if (ticketCategory === 'team') {
         amount = 300;
     } else {
-        // Individual Ticket
-        if (institution === 'MMCOE') {
-            amount = passOption === 'Lunch + Goodies' ? 500 : 300;
-        } else {
-            amount = 800;
-        }
+        // Individual Ticket - Flat ₹800 for everyone
+        amount = 800;
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,9 +77,7 @@ const Payment = () => {
             } else {
                 formData.append('ticketCategory', ticketCategory);
                 formData.append('institution', ticketCategory === 'individual' ? institution : 'N/A');
-                if (institution === 'MMCOE' && ticketCategory === 'individual') {
-                    formData.append('passOption', passOption);
-                }
+                // passOption removed for individual tickets
             }
             formData.append('screenshot', file);
             if (idCardFile) {
@@ -165,26 +159,16 @@ const Payment = () => {
                                         onChange={(e) => setInstitution(e.target.value)}
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 focus:border-ted-red focus:outline-none transition-colors"
                                     >
-                                        <option value="MMCOE">MMCOE (Student/Faculty)</option>
-                                        <option value="Other">Community Pass / External</option>
+                                        <option value="MMCOE">MMCOE (Student/Faculty) - ₹800</option>
+                                        <option value="Other">Community Pass / External - ₹800</option>
                                     </select>
                                     <p className="text-xs text-gray-500 mt-2">
                                         * MMCOE ID will be verified at the venue.
                                     </p>
 
-                                    {institution === 'MMCOE' && (
-                                        <div className="mt-4">
-                                            <label className="block text-sm text-gray-400 mb-2">Select Pass Option</label>
-                                            <select
-                                                value={passOption}
-                                                onChange={(e) => setPassOption(e.target.value as any)}
-                                                className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 focus:border-ted-red focus:outline-none transition-colors"
-                                            >
-                                                <option value="Lunch + Goodies">₹500 (Lunch + Goodies)</option>
-                                                <option value="Lunch Only">₹300 (Lunch Only)</option>
-                                            </select>
-                                        </div>
-                                    )}
+                                    <p className="text-sm text-ted-red mt-4 font-bold">
+                                        Amount: ₹800
+                                    </p>
                                 </div>
                             )}
 
