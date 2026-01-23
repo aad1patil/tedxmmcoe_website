@@ -51,7 +51,7 @@ const Register = () => {
                             {/* Student Pass (MMCOE - Full) */}
                             <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between">
                                 <div>
-                                    <h3 className="text-xl font-bold mb-2">Student Pass (Full)</h3>
+                                    <h3 className="text-xl font-bold mb-2">MMCOE Student/Faculty Pass</h3>
                                     <div className="text-3xl font-bold mb-2">₹500</div>
                                     <p className="text-gray-400 text-sm mb-6">Food/Lunch + TEDxMMCOE Goodies</p>
                                 </div>
@@ -76,7 +76,7 @@ const Register = () => {
                             {/* Student Pass (MMCOE - Lunch Only) */}
                             <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between border-dashed">
                                 <div>
-                                    <h3 className="text-xl font-bold mb-2">Student (Lunch)</h3>
+                                    <h3 className="text-xl font-bold mb-2">MMCOE Student/Faculty Pass</h3>
                                     <div className="text-3xl font-bold mb-2">₹300</div>
                                     <p className="text-gray-400 text-sm mb-6">Only Food/Lunch will be provided</p>
                                 </div>

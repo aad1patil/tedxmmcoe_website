@@ -5,6 +5,16 @@ import { Calendar, MapPin } from 'lucide-react';
 const Home = () => {
     return (
         <div className="bg-ted-black text-white">
+            {/* MMCOE Header - Overlapping */}
+            <div className="absolute top-0 left-0 right-0 z-50 flex justify-center pt-4">
+                <img
+                    src="/mmcoe-header.png"
+                    alt="Marathwada Mitramandal's College of Engineering"
+                    className="h-16 md:h-20 object-contain drop-shadow-lg"
+                    style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}
+                />
+            </div>
+
             {/* Hero Section */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
