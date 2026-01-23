@@ -48,62 +48,36 @@ const Register = () => {
 
 
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12 text-left">
-                            {/* Student Pass (MMCOE - Full) */}
-                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between">
+                            {/* Student Pass (MMCOE - Full) - CLOSED */}
+                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden flex flex-col justify-between opacity-60">
                                 <div>
                                     <h3 className="text-xl font-bold mb-2">MMCOE Student/Faculty Pass</h3>
                                     <div className="text-3xl font-bold mb-2">₹500</div>
                                     <p className="text-gray-400 text-sm mb-6">Food/Lunch + TEDxMMCOE Goodies</p>
                                 </div>
-                                {soldOut ? (
-                                    <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
-                                        Sold Out
-                                    </button>
-                                ) : (
-                                    <Link
-                                        to="/login"
-                                        state={{ type: 'ticket', institution: 'MMCOE', passOption: 'Lunch + Goodies' }}
-                                        onClick={() => {
-                                            localStorage.setItem('pendingReg', JSON.stringify({ institution: 'MMCOE', passOption: 'Lunch + Goodies' }));
-                                        }}
-                                        className="block w-full text-center bg-ted-red text-white font-bold py-2 rounded-lg hover:bg-red-700 transition-colors"
-                                    >
-                                        Register (Full)
-                                    </Link>
-                                )}
+                                <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
+                                    Registrations Closed
+                                </button>
                             </div>
 
-                            {/* Student Pass (MMCOE - Lunch Only) */}
-                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between border-dashed">
+                            {/* Student Pass (MMCOE - Lunch Only) - CLOSED */}
+                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden flex flex-col justify-between border-dashed opacity-60">
                                 <div>
                                     <h3 className="text-xl font-bold mb-2">MMCOE Student/Faculty Pass</h3>
                                     <div className="text-3xl font-bold mb-2">₹300</div>
                                     <p className="text-gray-400 text-sm mb-6">Only Food/Lunch will be provided</p>
                                 </div>
-                                {soldOut ? (
-                                    <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
-                                        Sold Out
-                                    </button>
-                                ) : (
-                                    <Link
-                                        to="/login"
-                                        state={{ type: 'ticket', institution: 'MMCOE', passOption: 'Lunch Only' }}
-                                        onClick={() => {
-                                            localStorage.setItem('pendingReg', JSON.stringify({ institution: 'MMCOE', passOption: 'Lunch Only' }));
-                                        }}
-                                        className="block w-full text-center bg-gray-800 text-white font-bold py-2 rounded-lg hover:bg-gray-700 transition-colors"
-                                    >
-                                        Register (Lunch)
-                                    </Link>
-                                )}
+                                <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
+                                    Registrations Closed
+                                </button>
                             </div>
 
-                            {/* Community Pass (Others) */}
+                            {/* Community Pass (For Everyone) */}
                             <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between">
                                 <div>
                                     <h3 className="text-xl font-bold mb-2">Community Pass</h3>
                                     <div className="text-3xl font-bold mb-2">₹800</div>
-                                    <p className="text-gray-400 text-sm mb-6">(For Other Colleges & External)</p>
+                                    <p className="text-gray-400 text-sm mb-6">Food/Lunch + TEDxMMCOE Goodies</p>
                                 </div>
                                 {soldOut ? (
                                     <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
