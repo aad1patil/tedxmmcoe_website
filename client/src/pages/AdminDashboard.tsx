@@ -51,20 +51,11 @@ const AdminDashboard = () => {
     const individualRegistrations = registrations.filter((r: any) => r.ticketCategory !== 'team');
     const teamRegistrations = registrations.filter((r: any) => r.ticketCategory === 'team');
 
-    // Registration capacity tracking
-    const MAX_CAPACITY = 160;
+    // Registration capacity tracking - Limit removed
     const totalRegistrations = registrations.filter((r: any) => r.type !== 'merchandise').length;
-    const capacityPercentage = Math.round((totalRegistrations / MAX_CAPACITY) * 100);
 
-    // Warning thresholds
-    const getCapacityWarning = () => {
-        if (totalRegistrations >= MAX_CAPACITY) return { level: 'full', message: '🚫 Registrations are FULL (160/160)', color: 'bg-red-600' };
-        if (totalRegistrations >= 130) return { level: 'critical', message: `⚠️ Critical: Only ${MAX_CAPACITY - totalRegistrations} spots left! (${totalRegistrations}/160)`, color: 'bg-red-500' };
-        if (totalRegistrations >= 110) return { level: 'high', message: `⚠️ High demand: ${MAX_CAPACITY - totalRegistrations} spots remaining (${totalRegistrations}/160)`, color: 'bg-orange-500' };
-        if (totalRegistrations >= 100) return { level: 'warning', message: `📢 100+ registrations! ${MAX_CAPACITY - totalRegistrations} spots left (${totalRegistrations}/160)`, color: 'bg-yellow-500' };
-        return null;
-    };
-    const capacityWarning = getCapacityWarning();
+    // Warning thresholds - Disabled as per user request
+    const capacityWarning = null;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -342,30 +333,20 @@ const AdminDashboard = () => {
                 {/* Main Content */}
                 <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
                     {/* Capacity Warning Banner */}
-                    {capacityWarning && (
-                        <div className={`${capacityWarning.color} text-white px-4 py-3 rounded-lg mb-4 flex items-center justify-between shadow-lg`}>
-                            <span className="font-semibold">{capacityWarning.message}</span>
+                    {capacityWarning && (capacityWarning as any).color && (
+                        <div className={`${(capacityWarning as any).color} text-white px-4 py-3 rounded-lg mb-4 flex items-center justify-between shadow-lg`}>
+                            <span className="font-semibold">{(capacityWarning as any).message}</span>
                         </div>
                     )}
 
-                    {/* Capacity Counter */}
+                    {/* Capacity Counter - Limit removed */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4">
                         <div className="flex items-center justify-between mb-2">
-                            <span className="font-semibold text-gray-700">Registration Capacity</span>
-                            <span className="text-lg font-bold text-ted-red">{totalRegistrations} / {MAX_CAPACITY}</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-3">
-                            <div
-                                className={`h-3 rounded-full transition-all duration-500 ${capacityPercentage >= 100 ? 'bg-red-600' :
-                                    capacityPercentage >= 80 ? 'bg-orange-500' :
-                                        capacityPercentage >= 60 ? 'bg-yellow-500' : 'bg-green-500'
-                                    }`}
-                                style={{ width: `${Math.min(capacityPercentage, 100)}%` }}
-                            />
+                            <span className="font-semibold text-gray-700">Total Registrations</span>
+                            <span className="text-lg font-bold text-ted-red">{totalRegistrations}</span>
                         </div>
                         <div className="flex justify-between text-xs text-gray-500 mt-1">
                             <span>Individual: {individualRegistrations.length} | Team: {teamRegistrations.length}</span>
-                            <span>{MAX_CAPACITY - totalRegistrations} spots remaining</span>
                         </div>
                     </div>
 

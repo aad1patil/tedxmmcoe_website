@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Register = () => {
-    const [soldOut, setSoldOut] = useState(false);
     const [mmitSoldOut, setMmitSoldOut] = useState(false);
 
     useEffect(() => {
@@ -12,9 +11,12 @@ const Register = () => {
             try {
                 const apiUrl = import.meta.env.VITE_API_URL || '/api';
                 const { data } = await axios.get(`${apiUrl}/registrations/count`);
+                // Total registration soldOut check removed as per user request
+                /* 
                 if (data.count >= 180) {
                     setSoldOut(true);
                 }
+                */
                 if (data.mmitCount >= 15) {
                     setMmitSoldOut(true);
                 }
@@ -44,37 +46,10 @@ const Register = () => {
                             ⚠️ <strong>Important:</strong> If you select the wrong pass type, you will be required to repay the entire amount.
                         </p>
 
-                        {soldOut && (
-                            <div className="bg-red-500/20 border border-red-500 text-red-500 p-4 rounded-xl mb-8 font-bold text-xl animate-pulse">
-                                🎟️ TICKETS TRULY SOLD OUT! (Limit Reached)
-                            </div>
-                        )}
+
 
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 text-left">
-                            {/* Student Pass (MMCOE - Full) - CLOSED */}
-                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden flex flex-col justify-between opacity-60">
-                                <div>
-                                    <h3 className="text-xl font-bold mb-2">MMCOE Student/Faculty Pass</h3>
-                                    <div className="text-3xl font-bold mb-2">₹500</div>
-                                    <p className="text-gray-400 text-sm mb-6">Food/Lunch + TEDxMMCOE Goodies</p>
-                                </div>
-                                <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
-                                    Registrations Closed
-                                </button>
-                            </div>
-
-                            {/* Student Pass (MMCOE - Lunch Only) - CLOSED */}
-                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden flex flex-col justify-between border-dashed opacity-60">
-                                <div>
-                                    <h3 className="text-xl font-bold mb-2">MMCOE Student/Faculty Pass</h3>
-                                    <div className="text-3xl font-bold mb-2">₹300</div>
-                                    <p className="text-gray-400 text-sm mb-6">Only Food/Lunch will be provided</p>
-                                </div>
-                                <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
-                                    Registrations Closed
-                                </button>
-                            </div>
 
                             {/* MMIT Faculty/External Student Pass */}
                             <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between ring-2 ring-ted-red ring-opacity-50">
@@ -86,7 +61,7 @@ const Register = () => {
                                     <div className="text-3xl font-bold mb-2">₹500</div>
                                     <p className="text-gray-400 text-sm mb-6">Food/Lunch + TEDxMMCOE Goodies</p>
                                 </div>
-                                {soldOut || mmitSoldOut ? (
+                                {mmitSoldOut ? (
                                     <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
                                         Sold Out
                                     </button>
@@ -111,22 +86,16 @@ const Register = () => {
                                     <div className="text-3xl font-bold mb-2">₹800</div>
                                     <p className="text-gray-400 text-sm mb-6">Food/Lunch + TEDxMMCOE Goodies</p>
                                 </div>
-                                {soldOut ? (
-                                    <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
-                                        Sold Out
-                                    </button>
-                                ) : (
-                                    <Link
-                                        to="/login"
-                                        state={{ type: 'ticket', institution: 'Other' }}
-                                        onClick={() => {
-                                            localStorage.setItem('pendingReg', JSON.stringify({ institution: 'Other' }));
-                                        }}
-                                        className="block w-full text-center bg-gray-800 text-white font-bold py-2 rounded-lg hover:bg-gray-700 transition-colors"
-                                    >
-                                        Register (Community)
-                                    </Link>
-                                )}
+                                <Link
+                                    to="/login"
+                                    state={{ type: 'ticket', institution: 'Other' }}
+                                    onClick={() => {
+                                        localStorage.setItem('pendingReg', JSON.stringify({ institution: 'Other' }));
+                                    }}
+                                    className="block w-full text-center bg-gray-800 text-white font-bold py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                                >
+                                    Register (Community)
+                                </Link>
                             </div>
 
                             {/* Team Pass */}
@@ -136,22 +105,16 @@ const Register = () => {
                                     <div className="text-3xl font-bold mb-2">₹300</div>
                                     <p className="text-gray-400 text-sm mb-6">TEDxMMCOE team members only</p>
                                 </div>
-                                {soldOut ? (
-                                    <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
-                                        Sold Out
-                                    </button>
-                                ) : (
-                                    <Link
-                                        to="/login"
-                                        state={{ type: 'team' }}
-                                        onClick={() => {
-                                            localStorage.removeItem('pendingReg'); // Clear for team
-                                        }}
-                                        className="block w-full text-center bg-white text-black font-bold py-2 rounded-lg hover:bg-gray-200 transition-colors"
-                                    >
-                                        Register (Team)
-                                    </Link>
-                                )}
+                                <Link
+                                    to="/login"
+                                    state={{ type: 'team' }}
+                                    onClick={() => {
+                                        localStorage.removeItem('pendingReg'); // Clear for team
+                                    }}
+                                    className="block w-full text-center bg-white text-black font-bold py-2 rounded-lg hover:bg-gray-200 transition-colors"
+                                >
+                                    Register (Team)
+                                </Link>
                             </div>
                         </div>
 

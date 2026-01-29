@@ -75,14 +75,7 @@ router.post('/', protect, uploadFields, async (req: any, res) => {
             return res.status(400).json({ message: 'College ID Card is required for tickets.' });
         }
 
-        // Check for total limit (180 - updated from 160 based on Register.tsx)
-        const totalCount = await Registration.countDocuments({ type: { $ne: 'merchandise' } });
-        if (type !== 'merchandise' && totalCount >= 180) {
-            // Delete uploaded files if limit reached
-            if (req.files.screenshot?.[0]?.path) fs.unlinkSync(req.files.screenshot[0].path);
-            if (req.files.idCard?.[0]?.path) fs.unlinkSync(req.files.idCard[0].path);
-            return res.status(400).json({ message: 'Registrations are now closed. Maximum capacity reached.' });
-        }
+        // Total registration limit check removed as per user request
 
         // Check for MMIT specific limit (15)
         if (type !== 'merchandise' && institution === 'MMIT') {
