@@ -251,7 +251,7 @@ const Payment = () => {
                                 {idCardFile ? (
                                     <p className="text-ted-red font-medium">{idCardFile.name}</p>
                                 ) : (
-                                    <p className="text-gray-500 text-sm">Click to upload ID Card {type !== 'merchandise' && '(Required for Students)'}</p>
+                                    <p className="text-gray-500 text-sm">Click to upload ID Card {type !== 'merchandise' && '(Required for everyone for ID verification)'}</p>
                                 )}
                             </div>
                         </div>
