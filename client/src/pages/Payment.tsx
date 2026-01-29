@@ -161,7 +161,7 @@ const Payment = () => {
                                         onChange={(e) => setInstitution(e.target.value)}
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 focus:border-ted-red focus:outline-none transition-colors"
                                     >
-                                        <option value="MMCOE">MMCOE (Student/Faculty) - ₹800</option>
+                                        <option value="MMCOE">MMCOE Student - ₹800</option>
                                         <option value="MMIT">MMIT Students/MMCOE Faculty - ₹500</option>
                                         <option value="Other">Community Pass / External - ₹800</option>
                                     </select>
@@ -175,7 +175,7 @@ const Payment = () => {
 
                                     <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4 mt-6">
                                         <p className="text-red-500 text-xs font-bold leading-relaxed">
-                                            ⚠️ Except for the limited MMIT special passes (₹500), all prices have been updated to ₹800 due to high demand. No payment less than ₹800 (except for MMIT/Team) will be accepted.
+                                            ⚠️ Except for the limited MMIT students/MMCOE faculty special passes (₹500), all prices have been updated to ₹800 due to high demand. No payment less than ₹800 (except for MMIT/MMCOE Faculty/Team) will be accepted.
                                         </p>
                                     </div>
                                 </div>
