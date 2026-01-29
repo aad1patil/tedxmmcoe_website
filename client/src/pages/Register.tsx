@@ -1,124 +1,34 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 const Register = () => {
-    const [mmitSoldOut, setMmitSoldOut] = useState(false);
-
-    useEffect(() => {
-        const checkRegistrations = async () => {
-            try {
-                const apiUrl = import.meta.env.VITE_API_URL || '/api';
-                const { data } = await axios.get(`${apiUrl}/registrations/count`);
-                // Total registration soldOut check removed as per user request
-                /* 
-                if (data.count >= 180) {
-                    setSoldOut(true);
-                }
-                */
-                if (data.mmitCount >= 15) {
-                    setMmitSoldOut(true);
-                }
-            } catch (err) {
-                console.error("Error checking registration count:", err);
-            }
-        };
-        checkRegistrations();
-    }, []);
-
     return (
-        <div className="bg-ted-black min-h-screen pt-12 pb-20 text-white flex flex-col items-center">
+        <div className="bg-ted-black min-h-screen pt-24 pb-20 text-white flex items-center justify-center">
             <div className="container mx-auto px-4">
-                <div className="max-w-3xl mx-auto text-center">
+                <div className="max-w-4xl mx-auto text-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
+                        className="bg-gray-900/50 p-12 rounded-3xl border border-ted-red shadow-2xl backdrop-blur-sm"
                     >
-                        <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                            Secure Your <span className="text-ted-red">Spot</span>
-                        </h1>
-                        <p className="text-gray-400 text-xl mb-4">
-                            Join 100 attendees for an unforgettable experience at TEDxMMCOE.
-                        </p>
-                        <p className="text-yellow-500 text-sm mb-12 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
-                            ⚠️ <strong>Important:</strong> If you select the wrong pass type, you will be required to repay the entire amount.
-                        </p>
-
-
-
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 text-left">
-
-                            {/* MMIT Faculty/External Student Pass */}
-                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between ring-2 ring-ted-red ring-opacity-50">
-                                <div>
-                                    <div className="absolute top-0 right-0 bg-ted-red text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg uppercase tracking-wider animate-pulse">
-                                        Limited: 15 Seats
-                                    </div>
-                                    <h3 className="text-xl font-bold mb-2">MMIT Students/MMCOE Faculty</h3>
-                                    <div className="text-3xl font-bold mb-2">₹500</div>
-                                    <p className="text-gray-400 text-sm mb-6">Food/Lunch + TEDxMMCOE Goodies</p>
-                                </div>
-                                {mmitSoldOut ? (
-                                    <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
-                                        Sold Out
-                                    </button>
-                                ) : (
-                                    <Link
-                                        to="/login"
-                                        state={{ type: 'ticket', institution: 'MMIT' }}
-                                        onClick={() => {
-                                            localStorage.setItem('pendingReg', JSON.stringify({ institution: 'MMIT' }));
-                                        }}
-                                        className="block w-full text-center bg-ted-red text-white font-bold py-2 rounded-lg hover:bg-red-700 transition-colors"
-                                    >
-                                        Register (Special Pass)
-                                    </Link>
-                                )}
-                            </div>
-
-                            {/* Community Pass (For Everyone) */}
-                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between">
-                                <div>
-                                    <h3 className="text-xl font-bold mb-2">Community Pass</h3>
-                                    <div className="text-3xl font-bold mb-2">₹800</div>
-                                    <p className="text-gray-400 text-sm mb-6">Food/Lunch + TEDxMMCOE Goodies</p>
-                                </div>
-                                <Link
-                                    to="/login"
-                                    state={{ type: 'ticket', institution: 'Other' }}
-                                    onClick={() => {
-                                        localStorage.setItem('pendingReg', JSON.stringify({ institution: 'Other' }));
-                                    }}
-                                    className="block w-full text-center bg-gray-800 text-white font-bold py-2 rounded-lg hover:bg-gray-700 transition-colors"
-                                >
-                                    Register (Community)
-                                </Link>
-                            </div>
-
-                            {/* Team Pass */}
-                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between">
-                                <div>
-                                    <h3 className="text-xl font-bold mb-2">Team Pass</h3>
-                                    <div className="text-3xl font-bold mb-2">₹300</div>
-                                    <p className="text-gray-400 text-sm mb-6">TEDxMMCOE team members only</p>
-                                </div>
-                                <Link
-                                    to="/login"
-                                    state={{ type: 'team' }}
-                                    onClick={() => {
-                                        localStorage.removeItem('pendingReg'); // Clear for team
-                                    }}
-                                    className="block w-full text-center bg-white text-black font-bold py-2 rounded-lg hover:bg-gray-200 transition-colors"
-                                >
-                                    Register (Team)
-                                </Link>
-                            </div>
+                        <div className="inline-flex items-center justify-center w-20 h-20 bg-ted-red/20 rounded-full mb-8">
+                            <svg className="w-10 h-10 text-ted-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 0v2m0-2h2m-2 0H10m11 3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
                         </div>
-
-
+                        <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                            Registrations <span className="text-ted-red">Closed</span>
+                        </h1>
+                        <p className="text-gray-300 text-xl max-w-2xl mx-auto mb-8 leading-relaxed">
+                            Thank you for your overwhelming interest! We have officially reached our maximum capacity for TEDxMMCOE.
+                        </p>
+                        <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent my-8" />
+                        <p className="text-gray-500 text-base">
+                            Stay tuned for updates on our social media channels.
+                            <br />
+                            For any queries, reach out to <span className="text-white">tedxmmcoe@mmcoe.edu.in</span>
+                        </p>
                     </motion.div>
                 </div>
             </div>

@@ -60,72 +60,8 @@ const uploadFields = upload.fields([
 // @route   POST /api/registrations
 // @desc    Create a new registration
 // @access  Private
-router.post('/', protect, uploadFields, async (req: any, res) => {
-    try {
-        const { transactionId, type, ticketCategory, institution, size, amount, passOption } = req.body;
-
-        if (!req.files || !req.files.screenshot) {
-            return res.status(400).json({ message: 'Payment Screenshot is required.' });
-        }
-
-        // ID Card is required ONLY for tickets, not for merchandise
-        if (type !== 'merchandise' && !req.files.idCard) {
-            // Clean up uploaded screenshot if validation fails
-            if (req.files.screenshot[0].path) fs.unlinkSync(req.files.screenshot[0].path);
-            return res.status(400).json({ message: 'College ID Card is required for tickets.' });
-        }
-
-        // Total registration limit check removed as per user request
-
-        // Check for MMIT specific limit (15)
-        if (type !== 'merchandise' && institution === 'MMIT') {
-            const mmitCount = await Registration.countDocuments({
-                type: { $ne: 'merchandise' },
-                institution: 'MMIT'
-            });
-            if (mmitCount >= 15) {
-                if (req.files.screenshot?.[0]?.path) fs.unlinkSync(req.files.screenshot[0].path);
-                if (req.files.idCard?.[0]?.path) fs.unlinkSync(req.files.idCard[0].path);
-                return res.status(400).json({ message: 'MMIT special passes are sold out.' });
-            }
-        }
-
-        // Fetch user from database to get the most up-to-date name
-        const user = await User.findById(req.user.id);
-        if (!user) {
-            if (req.files.screenshot?.[0]?.path) fs.unlinkSync(req.files.screenshot[0].path);
-            if (req.files.idCard?.[0]?.path) fs.unlinkSync(req.files.idCard[0].path);
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Normalize paths to be relative (e.g., uploads/filename.png)
-        // This prevents issues with absolute paths in Docker
-        const screenshotPath = `uploads/${path.basename(req.files.screenshot[0].path)}`;
-        const idCardPath = req.files.idCard?.[0] ? `uploads/${path.basename(req.files.idCard[0].path)}` : undefined;
-
-        const registration = await Registration.create({
-            userId: req.user.id,
-            name: user.name,
-            email: user.email,
-            transactionId,
-            screenshotPath,
-            idCardPath,
-            type,
-            ticketCategory,
-            institution,
-            size,
-            passOption,
-            amount: Number(amount), // Ensure it's a number
-        });
-
-        res.status(201).json(registration);
-    } catch (error: any) {
-        console.error("Registration Error:", error);
-        // Attempt to clean up files if database creation fails
-        if (req.files?.screenshot?.[0]?.path) try { fs.unlinkSync(req.files.screenshot[0].path); } catch (e) { }
-        if (req.files?.idCard?.[0]?.path) try { fs.unlinkSync(req.files.idCard[0].path); } catch (e) { }
-        res.status(500).json({ message: error.message });
-    }
+router.post('/', protect, async (req: any, res) => {
+    return res.status(403).json({ message: 'Registrations are now closed. We have reached maximum capacity.' });
 });
 
 // @route   GET /api/registrations/my

@@ -131,7 +131,7 @@ const Dashboard = () => {
                                 { title: 'Event Details', desc: 'View schedule & venue info', path: '/event-details', color: 'bg-blue-500' },
                                 { title: 'Timeline', desc: 'Track the event journey', path: '/timeline', color: 'bg-purple-500' },
                                 { title: 'Meet Speakers', desc: 'Our visionaries', path: '/speakers', color: 'bg-green-500' },
-                                { title: 'Buy Ticket', desc: 'Secure your spot', path: '/payment', color: 'bg-orange-500' }
+                                { title: 'Registrations Closed', desc: 'Maximum capacity reached', path: '/register', color: 'bg-gray-500' }
                             ].map((item, index) => (
                                 <motion.button
                                     key={item.title}

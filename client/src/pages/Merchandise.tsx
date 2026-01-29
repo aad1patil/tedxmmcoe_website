@@ -1,28 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import { ShoppingBag, Check } from 'lucide-react';
 
 const SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
 
 const Merchandise = () => {
-    const navigate = useNavigate();
     const [selectedSize, setSelectedSize] = useState<string>('');
     const [isHovered, setIsHovered] = useState(false);
 
-    const handleBuyNow = () => {
-        if (!selectedSize) {
-            alert('Please select a size');
-            return;
-        }
-        navigate('/payment', {
-            state: {
-                type: 'merchandise',
-                size: selectedSize,
-                amount: 549
-            }
-        });
-    };
 
     return (
         <div className="min-h-screen bg-ted-black text-white pt-24 px-4 pb-12">
@@ -90,15 +75,11 @@ const Merchandise = () => {
 
                         {/* Action Component */}
                         <button
-                            onClick={handleBuyNow}
-                            disabled={!selectedSize}
-                            className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center space-x-3 transition-all duration-300 ${selectedSize
-                                ? 'bg-ted-red hover:bg-red-700 text-white shadow-lg hover:shadow-red-900/50'
-                                : 'bg-gray-800 text-gray-500 cursor-not-allowed'
-                                }`}
+                            disabled
+                            className="w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center space-x-3 transition-all duration-300 bg-gray-800 text-gray-500 cursor-not-allowed"
                         >
                             <ShoppingBag className="w-6 h-6" />
-                            <span>{selectedSize ? 'Buy Now' : 'Select a Size'}</span>
+                            <span>Sales Closed</span>
                         </button>
 
                         {/* Features */}

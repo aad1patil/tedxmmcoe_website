@@ -17,9 +17,11 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const User_1 = __importDefault(require("../models/User"));
 const router = express_1.default.Router();
+// Only this email can be admin
+const ADMIN_EMAIL = 'tedxmmcoe@mmcoe.edu.in';
 // Generate Token
-const generateToken = (id, role) => {
-    return jsonwebtoken_1.default.sign({ id, role }, process.env.JWT_SECRET || 'secret_key_change_this', {
+const generateToken = (id, role, email, name) => {
+    return jsonwebtoken_1.default.sign({ id, role, email, name }, process.env.JWT_SECRET || 'secret_key_change_this', {
         expiresIn: '30d',
     });
 };
@@ -27,7 +29,7 @@ const generateToken = (id, role) => {
 // @desc    Register a new user
 // @access  Public
 router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone, college } = req.body;
     try {
         const userExists = yield User_1.default.findOne({ email });
         if (userExists) {
@@ -35,10 +37,15 @@ router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, functio
         }
         const salt = yield bcryptjs_1.default.genSalt(10);
         const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
+        // Auto-assign admin role ONLY for the specific admin email
+        const role = email === ADMIN_EMAIL ? 'admin' : 'user';
         const user = yield User_1.default.create({
             name,
             email,
             password: hashedPassword,
+            role,
+            phone,
+            college
         });
         if (user) {
             res.status(201).json({
@@ -46,7 +53,9 @@ router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, functio
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                token: generateToken(user._id.toString(), user.role),
+                phone: user.phone,
+                college: user.college,
+                token: generateToken(user._id.toString(), user.role, user.email, user.name),
             });
         }
         else {
@@ -70,7 +79,9 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                token: generateToken(user._id.toString(), user.role),
+                phone: user.phone,
+                college: user.college,
+                token: generateToken(user._id.toString(), user.role, user.email, user.name),
             });
         }
         else {

@@ -133,7 +133,12 @@ const Payment = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-gray-900 rounded-2xl p-8 border border-gray-800"
                 >
-                    <h1 className="text-3xl font-bold mb-2 text-center">Complete Payment</h1>
+                    <div className="bg-ted-red/10 border border-ted-red rounded-xl p-4 mb-8 text-center">
+                        <p className="text-ted-red font-bold text-lg">Registrations are officially CLOSED</p>
+                        <p className="text-gray-400 text-sm mt-1">We have reached maximum capacity. No new payments will be accepted.</p>
+                    </div>
+
+                    <h1 className="text-3xl font-bold mb-2 text-center opacity-50">Complete Payment</h1>
                     <p className="text-gray-400 text-center mb-8">
                         {type === 'merchandise' ? `Official T-Shirt (${size})` : (ticketCategory === 'team' ? 'Team Pass' : 'Event Ticket')}
                     </p>
@@ -257,11 +262,11 @@ const Payment = () => {
                         </div>
 
                         <button
-                            type="submit"
-                            disabled={uploading}
-                            className={`w-full bg-ted-red text-white font-bold py-4 rounded-lg hover:bg-red-700 transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            type="button"
+                            disabled
+                            className="w-full bg-gray-800 text-gray-500 font-bold py-4 rounded-lg cursor-not-allowed"
                         >
-                            {uploading ? 'Uploading...' : `Pay ₹${amount} & Submit`}
+                            Closed
                         </button>
 
                         <p className="text-center text-sm text-gray-400 mt-4">

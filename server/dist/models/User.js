@@ -23,6 +23,14 @@ const userSchema = new mongoose_1.default.Schema({
         type: String,
         required: true
     },
+    phone: {
+        type: String,
+        required: false
+    },
+    college: {
+        type: String,
+        required: false
+    },
     createdAt: {
         type: Date,
         default: Date.now
