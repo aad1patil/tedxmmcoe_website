@@ -19,7 +19,7 @@ const generateToken = (id: string, role: string, email: string, name: string) =>
 // @desc    Register a new user
 // @access  Public
 router.post('/register', async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone, college } = req.body;
 
     try {
         const userExists = await User.findOne({ email });
@@ -39,6 +39,8 @@ router.post('/register', async (req, res) => {
             email,
             password: hashedPassword,
             role,
+            phone,
+            college
         });
 
         if (user) {
@@ -47,6 +49,8 @@ router.post('/register', async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                phone: user.phone,
+                college: user.college,
                 token: generateToken(user._id.toString(), user.role, user.email, user.name),
             });
         } else {
@@ -72,6 +76,8 @@ router.post('/login', async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                phone: user.phone,
+                college: user.college,
                 token: generateToken(user._id.toString(), user.role, user.email, user.name),
             });
         } else {

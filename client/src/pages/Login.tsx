@@ -39,7 +39,7 @@ const Login = () => {
             if (isLogin) {
                 await login(formData.email, formData.password);
             } else {
-                await signup(formData.name, formData.email, formData.password);
+                await signup(formData.name, formData.email, formData.password, formData.phone, formData.college);
             }
             navigate('/dashboard');
 
@@ -108,6 +108,7 @@ const Login = () => {
                                         required
                                     >
                                         <option value="MMCOE">MMCOE (Marathwada Mitra Mandal's College of Engineering)</option>
+                                        <option value="MMIT">MMIT (Marathwada Mitra Mandal's Institute of Technology)</option>
                                         <option value="Other">Other College / External</option>
                                     </select>
                                 </div>

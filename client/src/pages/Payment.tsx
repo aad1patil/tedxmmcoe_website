@@ -21,8 +21,12 @@ const Payment = () => {
     // passOption removed as individual tickets are now fixed at ₹800
     const [ticketCategory, setTicketCategory] = useState<'individual' | 'team'>((location.state?.type === 'team') ? 'team' : 'individual');
 
-    // Handle initial state from location or localStorage
+    // Handle initial state from location or localStorage or currentUser
     useState(() => {
+        if (currentUser?.college) {
+            setInstitution(currentUser.college);
+        }
+
         const saved = localStorage.getItem('pendingReg');
         if (saved) {
             try {
@@ -161,8 +165,8 @@ const Payment = () => {
                                         onChange={(e) => setInstitution(e.target.value)}
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 focus:border-ted-red focus:outline-none transition-colors"
                                     >
-                                        <option value="MMCOE">MMCOE Student - ₹800</option>
-                                        <option value="MMIT">MMIT Students/MMCOE Faculty - ₹500</option>
+                                        <option value="MMCOE">MMCOE Student Only - ₹800</option>
+                                        <option value="MMIT">MMIT Student / MMCOE Faculty Only - ₹500</option>
                                         <option value="Other">Community Pass / External - ₹800</option>
                                     </select>
                                     <p className="text-xs text-gray-500 mt-2">

@@ -7,6 +7,8 @@ interface User {
     email: string;
     role: string;
     token: string;
+    phone?: string;
+    college?: string;
 }
 
 interface AuthContextType {
@@ -14,7 +16,7 @@ interface AuthContextType {
     loading: boolean;
     isAdmin: boolean;
     login: (email: string, password: string) => Promise<void>;
-    signup: (name: string, email: string, password: string) => Promise<void>;
+    signup: (name: string, email: string, password: string, phone: string, college: string) => Promise<void>;
     logout: () => void;
 }
 
@@ -49,11 +51,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsAdmin(data.role === 'admin');
     };
 
-    const signup = async (name: string, email: string, password: string) => {
+    const signup = async (name: string, email: string, password: string, phone: string, college: string) => {
         const { data } = await axios.post(`${import.meta.env.VITE_API_URL || '/api'}/auth/register`, {
             name,
             email,
-            password
+            password,
+            phone,
+            college
         });
         localStorage.setItem('userInfo', JSON.stringify(data));
         setCurrentUser(data);
