@@ -23,39 +23,36 @@ const Home = () => {
                         transition={{ duration: 0.8 }}
                         className="flex flex-col items-center"
                     >
-                        {/* MMCOE Header Logo - Between Navbar and Headline */}
-                        <div className="w-full max-w-xl md:max-w-5xl mb-12">
+                        <h1 className="text-6xl md:text-9xl font-bold mb-4 -mt-20">
+                            <span className="text-ted-red">TEDx</span>MMCOE
+                        </h1>
+                        <h2 className="text-xl md:text-3xl font-medium mb-12 text-ted-red tracking-[0.3em] uppercase">
+                            Ideas Worth Spreading
+                        </h2>
+
+                        {/* MMCOE Header Logo - Positioned below for better branding flow */}
+                        <div className="w-full max-w-xl md:max-w-3xl mb-16 opacity-80">
                             <img
                                 src="/mmcoe-header.png"
                                 alt="Marathwada Mitramandal's College of Engineering"
                                 className="w-full h-auto object-contain drop-shadow-2xl"
-                                style={{ filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.4)) brightness(0) invert(1)' }}
+                                style={{ filter: 'brightness(0) invert(1)' }}
                             />
                         </div>
 
-                        <h2 className="text-xl md:text-3xl font-medium mb-4 text-ted-red tracking-widest uppercase">
-                            Ideas Change Everything
-                        </h2>
-                        <h1 className="text-5xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 mb-6">
-                            TEDxMMCOE
-                        </h1>
-                        <p className="text-lg md:text-2xl text-gray-300 max-w-2xl mx-auto mb-10">
-                            Join us for a day of inspiration, innovation, and connection as we explore the boundaries of human potential.
-                        </p>
-
                         <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-12">
-                            <div className="flex items-center gap-2 text-gray-300">
-                                <Calendar className="text-ted-red" />
-                                <span>January 31, 2026</span>
+                            <div className="flex items-center gap-2 text-gray-400">
+                                <Calendar className="text-ted-red w-5 h-5" />
+                                <span className="text-sm md:text-base">January 31, 2026</span>
                             </div>
                             <a
                                 href="https://share.google/ryG58p146EqNqs4Gh"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-gray-300 hover:text-ted-red transition-colors"
+                                className="flex items-center gap-2 text-gray-400 hover:text-ted-red transition-colors"
                             >
-                                <MapPin className="text-ted-red" />
-                                <span>IMERT Hall, MMCOE</span>
+                                <MapPin className="text-ted-red w-5 h-5" />
+                                <span className="text-sm md:text-base">IMERT Hall, MMCOE</span>
                             </a>
                         </div>
 
