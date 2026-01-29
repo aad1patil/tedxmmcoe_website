@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBag, Check } from 'lucide-react';
 
 const SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
 
@@ -74,27 +73,8 @@ const Merchandise = () => {
                         </div>
 
                         {/* Action Component */}
-                        <button
-                            disabled
-                            className="w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center space-x-3 transition-all duration-300 bg-gray-800 text-gray-500 cursor-not-allowed"
-                        >
-                            <ShoppingBag className="w-6 h-6" />
-                            <span>Sales Closed</span>
-                        </button>
-
-                        {/* Features */}
-                        <div className="grid grid-cols-2 gap-4 pt-6 border-t border-gray-800">
-                            {[
-                                'Premium Cotton',
-                                'Unisex Fit',
-                                'Durable Print',
-                                'Comfortable'
-                            ].map((feature) => (
-                                <div key={feature} className="flex items-center space-x-2 text-sm text-gray-400">
-                                    <Check className="w-4 h-4 text-ted-red" />
-                                    <span>{feature}</span>
-                                </div>
-                            ))}
+                        <div className="p-8 bg-gray-900/50 rounded-2xl border border-gray-800 text-center">
+                            <p className="text-gray-400 font-medium italic">General sales have ended.</p>
                         </div>
                     </div>
                 </motion.div>

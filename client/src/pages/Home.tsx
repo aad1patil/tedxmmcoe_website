@@ -61,12 +61,6 @@ const Home = () => {
 
                         <div className="flex flex-col md:flex-row justify-center gap-4">
                             <Link
-                                to="/register"
-                                className="px-8 py-4 bg-gray-700 text-gray-400 font-bold rounded-full cursor-default transition-colors grayscale"
-                            >
-                                Registrations Closed
-                            </Link>
-                            <Link
                                 to="/speakers"
                                 className="px-8 py-4 border border-white text-white font-bold rounded-full hover:bg-white hover:text-black transition-all transform hover:scale-105 duration-200"
                             >

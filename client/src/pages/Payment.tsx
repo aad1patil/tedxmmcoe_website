@@ -35,17 +35,8 @@ const Payment = () => {
                     </p>
 
                     <div className="space-y-6 opacity-30 pointer-events-none grayscale">
-                        <div className="bg-white p-6 rounded-xl w-full max-w-sm mx-auto mb-8 text-center">
-                            <img
-                                src="/upi-qr.jpg"
-                                alt="Payment QR Code"
-                                className="w-full h-auto mx-auto mb-4 opacity-50"
-                            />
-                            <p className="text-black font-bold text-lg underline decoration-ted-red">UPI ID: tedxmmcoe@upi</p>
-                        </div>
-
-                        <div className="text-center p-4 bg-black/40 rounded-lg">
-                            <p className="text-gray-500 italic">Payments are no longer being accepted.</p>
+                        <div className="text-center p-12 bg-black/40 rounded-lg border border-dashed border-gray-800">
+                            <p className="text-gray-500 italic text-lg">Payments are no longer being accepted.</p>
                         </div>
                     </div>
 
