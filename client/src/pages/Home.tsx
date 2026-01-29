@@ -23,15 +23,8 @@ const Home = () => {
                         transition={{ duration: 0.8 }}
                         className="flex flex-col items-center"
                     >
-                        <h1 className="text-6xl md:text-9xl font-bold mb-4 -mt-20">
-                            <span className="text-ted-red">TEDx</span>MMCOE
-                        </h1>
-                        <h2 className="text-xl md:text-3xl font-medium mb-12 text-ted-red tracking-[0.3em] uppercase">
-                            Ideas Worth Spreading
-                        </h2>
-
-                        {/* MMCOE Header Logo - Positioned below for better branding flow */}
-                        <div className="w-full max-w-xl md:max-w-3xl mb-16 opacity-80">
+                        {/* MMCOE Header Logo - Back at the top with better spacing */}
+                        <div className="w-full max-w-xl md:max-w-4xl mb-12 -mt-16">
                             <img
                                 src="/mmcoe-header.png"
                                 alt="Marathwada Mitramandal's College of Engineering"
@@ -39,6 +32,13 @@ const Home = () => {
                                 style={{ filter: 'brightness(0) invert(1)' }}
                             />
                         </div>
+
+                        <h2 className="text-xl md:text-3xl font-medium mb-4 text-ted-red tracking-[0.2em] uppercase">
+                            Ideas Worth Spreading
+                        </h2>
+                        <h1 className="text-6xl md:text-9xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 mb-10">
+                            <span className="text-ted-red">TEDx</span>MMCOE
+                        </h1>
 
                         <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-12">
                             <div className="flex items-center gap-2 text-gray-400">
