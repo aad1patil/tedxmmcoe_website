@@ -13,7 +13,6 @@ const Register = () => {
                     >
                         <div className="inline-flex items-center justify-center w-20 h-20 bg-ted-red/20 rounded-full mb-8">
                             <svg className="w-10 h-10 text-ted-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 0v2m0-2h2m-2 0H10m11 3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </div>
@@ -21,13 +20,13 @@ const Register = () => {
                             Registrations <span className="text-ted-red">Closed</span>
                         </h1>
                         <p className="text-gray-300 text-xl max-w-2xl mx-auto mb-8 leading-relaxed">
-                            Thank you for your overwhelming interest! We have officially reached our maximum capacity for TEDxMMCOE.
+                            Thank you for your overwhelming interest! We have officially reached our maximum capacity for TEDxMMCOE 2026.
                         </p>
                         <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent my-8" />
                         <p className="text-gray-500 text-base">
                             Stay tuned for updates on our social media channels.
                             <br />
-                            For any queries, reach out to <span className="text-white">tedxmmcoe@mmcoe.edu.in</span>
+                            For any queries, reach out to <span className="text-white font-medium">tedxmmcoe@mmcoe.edu.in</span>
                         </p>
                     </motion.div>
                 </div>
