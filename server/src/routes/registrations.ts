@@ -24,11 +24,15 @@ const storage = multer.diskStorage({
 });
 
 // @route   GET /api/registrations/count
-// @desc    Get total registration count (Public)
+// @desc    Get total and MMIT registration count (Public)
 router.get('/count', async (req, res) => {
     try {
-        const count = await Registration.countDocuments({ type: { $ne: 'merchandise' } });
-        res.json({ count });
+        const totalCount = await Registration.countDocuments({ type: { $ne: 'merchandise' } });
+        const mmitCount = await Registration.countDocuments({
+            type: { $ne: 'merchandise' },
+            institution: 'MMIT'
+        });
+        res.json({ count: totalCount, mmitCount });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
@@ -71,13 +75,26 @@ router.post('/', protect, uploadFields, async (req: any, res) => {
             return res.status(400).json({ message: 'College ID Card is required for tickets.' });
         }
 
-        // Check for limit (160)
-        const count = await Registration.countDocuments({ type: { $ne: 'merchandise' } });
-        if (type !== 'merchandise' && count >= 160) {
+        // Check for total limit (180 - updated from 160 based on Register.tsx)
+        const totalCount = await Registration.countDocuments({ type: { $ne: 'merchandise' } });
+        if (type !== 'merchandise' && totalCount >= 180) {
             // Delete uploaded files if limit reached
             if (req.files.screenshot?.[0]?.path) fs.unlinkSync(req.files.screenshot[0].path);
             if (req.files.idCard?.[0]?.path) fs.unlinkSync(req.files.idCard[0].path);
             return res.status(400).json({ message: 'Registrations are now closed. Maximum capacity reached.' });
+        }
+
+        // Check for MMIT specific limit (15)
+        if (type !== 'merchandise' && institution === 'MMIT') {
+            const mmitCount = await Registration.countDocuments({
+                type: { $ne: 'merchandise' },
+                institution: 'MMIT'
+            });
+            if (mmitCount >= 15) {
+                if (req.files.screenshot?.[0]?.path) fs.unlinkSync(req.files.screenshot[0].path);
+                if (req.files.idCard?.[0]?.path) fs.unlinkSync(req.files.idCard[0].path);
+                return res.status(400).json({ message: 'MMIT special passes are sold out.' });
+            }
         }
 
         // Fetch user from database to get the most up-to-date name

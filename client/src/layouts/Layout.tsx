@@ -19,7 +19,7 @@ const Layout = () => {
         { name: 'Speakers', path: '/speakers' },
         ...(currentUser?.email === 'tedxmmcoe@mmcoe.edu.in' ? [{ name: 'Admin', path: '/admin' }] : []),
         ...(!currentUser ? [{ name: 'Login', path: '/login', cta: true }] : []),
-        { name: currentUser ? 'Dashboard' : 'Register', path: currentUser ? '/dashboard' : '/register', cta: true },
+        { name: currentUser ? 'Dashboard' : 'Book Tickets', path: currentUser ? '/dashboard' : '/register', cta: true },
     ];
 
     const isActive = (path: string) => location.pathname === path;
@@ -85,7 +85,7 @@ const Layout = () => {
             </AnimatePresence>
 
             {/* Main Content */}
-            <main className="flex-grow pt-20">
+            <main className="flex-grow pt-24">
                 <Outlet />
             </main>
 

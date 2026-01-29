@@ -41,8 +41,10 @@ const Payment = () => {
         amount = location.state?.amount || 0;
     } else if (ticketCategory === 'team') {
         amount = 300;
+    } else if (institution === 'MMIT') {
+        amount = 500;
     } else {
-        // Individual Ticket - Flat ₹800 for everyone
+        // Individual Ticket - Flat ₹800 for everyone else
         amount = 800;
     }
 
@@ -160,6 +162,7 @@ const Payment = () => {
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 focus:border-ted-red focus:outline-none transition-colors"
                                     >
                                         <option value="MMCOE">MMCOE (Student/Faculty) - ₹800</option>
+                                        <option value="MMIT">MMIT Students/MMCOE Faculty - ₹500</option>
                                         <option value="Other">Community Pass / External - ₹800</option>
                                     </select>
                                     <p className="text-xs text-gray-500 mt-2">
@@ -167,12 +170,12 @@ const Payment = () => {
                                     </p>
 
                                     <p className="text-sm text-ted-red mt-4 font-bold">
-                                        Amount: ₹800
+                                        Amount: ₹{amount}
                                     </p>
 
                                     <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4 mt-6">
                                         <p className="text-red-500 text-xs font-bold leading-relaxed">
-                                            ⚠️ Due to a overwhelming response and limited seats left, we have updated our prices to 800 rupees for everyone(MMCOE students too), no payment less than 800 will be accepted and such registrations will not be considered valid.
+                                            ⚠️ Except for the limited MMIT special passes (₹500), all prices have been updated to ₹800 due to high demand. No payment less than ₹800 (except for MMIT/Team) will be accepted.
                                         </p>
                                     </div>
                                 </div>

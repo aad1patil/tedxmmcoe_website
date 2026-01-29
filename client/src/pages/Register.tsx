@@ -5,6 +5,7 @@ import axios from 'axios';
 
 const Register = () => {
     const [soldOut, setSoldOut] = useState(false);
+    const [mmitSoldOut, setMmitSoldOut] = useState(false);
 
     useEffect(() => {
         const checkRegistrations = async () => {
@@ -14,6 +15,9 @@ const Register = () => {
                 if (data.count >= 180) {
                     setSoldOut(true);
                 }
+                if (data.mmitCount >= 15) {
+                    setMmitSoldOut(true);
+                }
             } catch (err) {
                 console.error("Error checking registration count:", err);
             }
@@ -22,7 +26,7 @@ const Register = () => {
     }, []);
 
     return (
-        <div className="bg-ted-black min-h-screen py-20 text-white flex items-center justify-center">
+        <div className="bg-ted-black min-h-screen pt-12 pb-20 text-white flex flex-col items-center">
             <div className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto text-center">
                     <motion.div
@@ -47,7 +51,7 @@ const Register = () => {
                         )}
 
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12 text-left">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 text-left">
                             {/* Student Pass (MMCOE - Full) - CLOSED */}
                             <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden flex flex-col justify-between opacity-60">
                                 <div>
@@ -70,6 +74,34 @@ const Register = () => {
                                 <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
                                     Registrations Closed
                                 </button>
+                            </div>
+
+                            {/* MMIT Faculty/External Student Pass */}
+                            <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 relative overflow-hidden group hover:border-ted-red transition-colors flex flex-col justify-between ring-2 ring-ted-red ring-opacity-50">
+                                <div>
+                                    <div className="absolute top-0 right-0 bg-ted-red text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg uppercase tracking-wider animate-pulse">
+                                        Limited: 15 Seats
+                                    </div>
+                                    <h3 className="text-xl font-bold mb-2">MMIT Students/MMCOE Faculty</h3>
+                                    <div className="text-3xl font-bold mb-2">₹500</div>
+                                    <p className="text-gray-400 text-sm mb-6">Food/Lunch + TEDxMMCOE Goodies</p>
+                                </div>
+                                {soldOut || mmitSoldOut ? (
+                                    <button disabled className="block w-full text-center bg-gray-700 text-gray-500 font-bold py-3 rounded-lg cursor-not-allowed">
+                                        Sold Out
+                                    </button>
+                                ) : (
+                                    <Link
+                                        to="/login"
+                                        state={{ type: 'ticket', institution: 'MMIT' }}
+                                        onClick={() => {
+                                            localStorage.setItem('pendingReg', JSON.stringify({ institution: 'MMIT' }));
+                                        }}
+                                        className="block w-full text-center bg-ted-red text-white font-bold py-2 rounded-lg hover:bg-red-700 transition-colors"
+                                    >
+                                        Register (Special Pass)
+                                    </Link>
+                                )}
                             </div>
 
                             {/* Community Pass (For Everyone) */}
