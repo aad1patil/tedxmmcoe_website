@@ -19,7 +19,7 @@ const Layout = () => {
         { name: 'Speakers', path: '/speakers' },
         ...(currentUser?.email === 'tedxmmcoe@mmcoe.edu.in' ? [{ name: 'Admin', path: '/admin' }] : []),
         ...(!currentUser ? [{ name: 'Login', path: '/login', cta: true }] : []),
-        { name: currentUser ? 'Dashboard' : 'Book Tickets', path: currentUser ? '/dashboard' : '/register', cta: true },
+        { name: currentUser ? 'Dashboard' : 'Sold Out', path: currentUser ? '/dashboard' : '/register', cta: true },
     ];
 
     const isActive = (path: string) => location.pathname === path;
